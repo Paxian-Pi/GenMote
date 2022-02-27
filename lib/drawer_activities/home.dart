@@ -3,14 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:genmote/button_widget.dart';
 import 'package:genmote/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:genmote/drawer_activities/devices.dart';
+import 'package:genmote/drawer_activities/locator.dart';
+import 'package:genmote/drawer_activities/parameter.dart';
+import 'package:genmote/drawer_activities/profile.dart';
+import 'package:genmote/drawer_activities/settings.dart';
+import 'package:genmote/drawer_activities/sms.dart';
+import 'package:genmote/drawer_activities/device_timer.dart';
 import 'package:genmote/home_page_text/text1.dart';
 import 'package:genmote/home_page_text/text3.dart';
 import 'package:genmote/methods.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
@@ -142,11 +148,11 @@ class _HomeState extends State<Home> {
   //   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   // ];
 
-  final List<String> imgList = [
-    'assets/card_text.png',
-    'assets/card_text.png',
-    'assets/card_text.png',
-  ];
+  // final List<String> imgList = [
+  //   'assets/card_text.png',
+  //   'assets/card_text.png',
+  //   'assets/card_text.png',
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -511,45 +517,101 @@ class _HomeState extends State<Home> {
               // ),
               const SizedBox(height: 100),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransition(
+                      child: const Home(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("HOME", style: textStyle),
                 leading: Icon(Icons.house, color: iconColor),
               ),
               const Divider(height: 0.1),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransition(
+                      child: const Parameter(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("PARAMETER", style: textStyle),
                 leading: Icon(Icons.inbox, color: iconColor),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageTransition(
+                      child: const DeviceTimer(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("TIMER", style: textStyle),
                 leading: Icon(Icons.timelapse_outlined, color: iconColor),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransition(
+                      child: const Locator(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("LOCATOR", style: textStyle),
                 leading: Icon(Icons.location_searching_outlined, color: iconColor),
               ),
               const Divider(color: Colors.white, height: 0.5, indent: 20.0, endIndent: 20.0),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransition(
+                      child: const Devices(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("DEVICES", style: textStyle),
                 leading: Icon(Icons.device_hub, color: iconColor),
               ),
               const Divider(color: Colors.white, height: 1.0, indent: 20.0, endIndent: 20.0),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransition(
+                      child: const Sms(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("SMS", style: textStyle),
                 leading: Icon(Icons.sms, color: iconColor),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransition(
+                      child: const Profile(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("PROFILE", style: textStyle),
                 leading: Icon(Icons.person_add_alt, color: iconColor),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransition(
+                      child: const Settings(),
+                      type: PageTransitionType.fade,
+                    ),
+                  );
+                },
                 title: Text("SETTINGS", style: textStyle),
                 leading: Icon(Icons.settings, color: iconColor),
               ),

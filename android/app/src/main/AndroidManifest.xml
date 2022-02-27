@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gentro.genmote">
    <application
-        android:label="genmote"
+        android:label="GenMote"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
