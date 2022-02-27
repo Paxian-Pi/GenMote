@@ -2,6 +2,9 @@
 
 A WIFI controlled generator application.
 
+# Having issues with pushing? Use this link for a clue on what to do:
+- [https://stackoverflow.com/questions/59282476/error-rpc-failed-curl-92-http-2-stream-0-was-not-closed-cleanly-protocol-erro]
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
