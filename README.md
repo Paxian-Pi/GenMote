@@ -6,9 +6,8 @@ A WIFI controlled generator application.
 
 OR
 
-Increase the git buffer size, by running 
-## git config --global http.postBuffer 524288000
-with the command line, in the the root directory of your Flutter project.
+Increase the git buffer size, by running the command below in the the root directory of your Flutter project.
+### git config --global http.postBuffer 524288000
 
 ## Getting Started
 
