@@ -45,6 +45,7 @@ dependencies:
   syncfusion_flutter_gauges: ^19.4.52
   carousel_slider: ^4.0.0
   smooth_page_indicator: ^1.0.0+2
+  slide_drawer: ^1.0.3
 
 
 dev_dependencies:

@@ -16,6 +16,11 @@ class Methods {
     );
   }
 
+  static GlobalKey drawerOpener () {
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+    return scaffoldKey;
+  }
 
 }
 

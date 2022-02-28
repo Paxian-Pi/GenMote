@@ -108,6 +108,8 @@ class _HomeState extends State<Home> {
   //   );
   // }
 
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   late String textOne, textTwo, textThree;
 
   void _lang() {
@@ -159,11 +161,8 @@ class _HomeState extends State<Home> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      key: scaffoldKey,
       drawer: _openSideBar(),
-      appBar: AppBar(
-        title: const Text("Gentro"),
-      ),
-
       // body: Center(
       //   child: Container(
       //     padding: const EdgeInsets.all(14.0),
@@ -345,7 +344,6 @@ class _HomeState extends State<Home> {
       //     ), //Padding
       //   ), //SizedBox
       // ),
-
       body: Container(
         width: size.width,
         height: size.height,
@@ -355,60 +353,24 @@ class _HomeState extends State<Home> {
             fit: BoxFit.cover,
           ),
         ),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                width: size.width,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Constant.grey.withOpacity(0.7),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                  ),
-                ),
-                // child: CarouselSlider.builder(
-                //   carouselController: controller,
-                //   options: CarouselOptions(
-                //     initialPage: 1,
-                //     height: 200,
-                //     viewportFraction: 1,
-                //     enlargeCenterPage: true,
-                //     enlargeStrategy: CenterPageEnlargeStrategy.height,
-                //     onPageChanged: (index, reason) => setState(() => activeIndex = index)
-                //   ),
-                //   itemCount: imgList.length,
-                //   itemBuilder: (context, index, realIndex) {
-                //     final imgUrl = imgList[index];
-                //
-                //     return buildImage(imgUrl, index);
-                //   },
-                // ),
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (page) {
-                    setState(() => activeIndex = page);
-                  },
-                  children: [
-                    TextOne(text: textOne),
-                    TextTwo(text: textTwo),
-                    TextThree(text: textThree),
-                  ],
-                ),
+        child: Column(
+          children: [
+            _appBar(),
+            SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  _pageViewer(),
+                  const SizedBox(height: 5),
+                  _buildIndicator(),
+                  const SizedBox(height: 50),
+                  _powerButton(),
+                  const SizedBox(height: 30),
+                  _activityWidget(),
+                ],
               ),
-              const SizedBox(height: 5),
-              _buildIndicator(),
-              const SizedBox(height: 50),
-              _powerButton(),
-              const SizedBox(height: 30),
-              _activityWidget(),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       // floatingActionButton: FloatingActionButton(
@@ -484,6 +446,94 @@ class _HomeState extends State<Home> {
     //     child: const Icon(Icons.cloud_download),
     //   ),
     // );
+  }
+
+  Widget _appBar() {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      margin: const EdgeInsets.only(top: 50),
+      width: size.width,
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              scaffoldKey.currentState?.openDrawer();
+            },
+            child: const Icon(
+              Icons.menu_rounded,
+              color: Colors.white,
+              size: 30.0,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 100, right: 100),
+            width: 100,
+            height: 50,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/gentroLogo2.png"),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          const Icon(
+            Icons.wifi_off_outlined,
+            color: Colors.white,
+            size: 30.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _pageViewer() {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      width: size.width,
+      height: 200,
+      decoration: BoxDecoration(
+        color: Constant.grey.withOpacity(0.7),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+          bottomLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
+        ),
+      ),
+      // child: CarouselSlider.builder(
+      //   carouselController: controller,
+      //   options: CarouselOptions(
+      //     initialPage: 1,
+      //     height: 200,
+      //     viewportFraction: 1,
+      //     enlargeCenterPage: true,
+      //     enlargeStrategy: CenterPageEnlargeStrategy.height,
+      //     onPageChanged: (index, reason) => setState(() => activeIndex = index)
+      //   ),
+      //   itemCount: imgList.length,
+      //   itemBuilder: (context, index, realIndex) {
+      //     final imgUrl = imgList[index];
+      //
+      //     return buildImage(imgUrl, index);
+      //   },
+      // ),
+      child: PageView(
+        controller: _pageController,
+        onPageChanged: (page) {
+          setState(() => activeIndex = page);
+        },
+        children: [
+          TextOne(text: textOne),
+          TextTwo(text: textTwo),
+          TextThree(text: textThree),
+        ],
+      ),
+    );
   }
 
   Widget _openSideBar() {
@@ -563,9 +613,14 @@ class _HomeState extends State<Home> {
                   );
                 },
                 title: Text("LOCATOR", style: textStyle),
-                leading: Icon(Icons.location_searching_outlined, color: iconColor),
+                leading:
+                    Icon(Icons.location_searching_outlined, color: iconColor),
               ),
-              const Divider(color: Colors.white, height: 0.5, indent: 20.0, endIndent: 20.0),
+              const Divider(
+                  color: Colors.white,
+                  height: 0.5,
+                  indent: 20.0,
+                  endIndent: 20.0),
               ListTile(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
@@ -578,7 +633,11 @@ class _HomeState extends State<Home> {
                 title: Text("DEVICES", style: textStyle),
                 leading: Icon(Icons.device_hub, color: iconColor),
               ),
-              const Divider(color: Colors.white, height: 1.0, indent: 20.0, endIndent: 20.0),
+              const Divider(
+                  color: Colors.white,
+                  height: 1.0,
+                  indent: 20.0,
+                  endIndent: 20.0),
               ListTile(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
@@ -616,13 +675,23 @@ class _HomeState extends State<Home> {
                 leading: Icon(Icons.settings, color: iconColor),
               ),
               const SizedBox(height: 50),
-              const Divider(color: Colors.white, height: 0.5, indent: 20.0, endIndent: 20.0),
+              const Divider(
+                  color: Colors.white,
+                  height: 0.5,
+                  indent: 20.0,
+                  endIndent: 20.0),
               ListTile(
                 onTap: () {},
-                title: const Text("LOGOUT", style: TextStyle(color: Color(0xFFFD2222), fontSize: 16.0)),
-                leading: const Icon(Icons.login_outlined, color: Color(0xFFFD2222)),
+                title: const Text("LOGOUT",
+                    style: TextStyle(color: Color(0xFFFD2222), fontSize: 16.0)),
+                leading:
+                    const Icon(Icons.login_outlined, color: Color(0xFFFD2222)),
               ),
-              const Divider(color: Colors.white, height: 0.5, indent: 20.0, endIndent: 20.0),
+              const Divider(
+                  color: Colors.white,
+                  height: 0.5,
+                  indent: 20.0,
+                  endIndent: 20.0),
             ],
           ),
         ),
@@ -696,7 +765,8 @@ class _HomeState extends State<Home> {
                           height: size.height,
                           child: const CircleAvatar(
                             // TODO: Switch images using ternary operator
-                            backgroundImage: AssetImage('assets/off_no_network.png'),
+                            backgroundImage:
+                                AssetImage('assets/off_no_network.png'),
                           ),
                         )),
                       ],
@@ -710,7 +780,8 @@ class _HomeState extends State<Home> {
         const SizedBox(height: 20),
         const Text('OFF', style: TextStyle(color: Colors.white, fontSize: 14)),
         const SizedBox(height: 10),
-        const Text('CLICK TO TURN ON DEVICE', style: TextStyle(color: Colors.white, fontSize: 14)),
+        const Text('CLICK TO TURN ON DEVICE',
+            style: TextStyle(color: Colors.white, fontSize: 14)),
       ],
     );
   }
@@ -724,7 +795,8 @@ class _HomeState extends State<Home> {
           children: [
             _temperatureMeter(),
             const SizedBox(height: 20),
-            const Text('TEMPERATURE', style: TextStyle(color: Constant.white, fontSize: 14)),
+            const Text('TEMPERATURE',
+                style: TextStyle(color: Constant.white, fontSize: 14)),
           ],
         ),
         const SizedBox(width: 50),
@@ -733,7 +805,8 @@ class _HomeState extends State<Home> {
           children: [
             _vibrationsMeter(),
             const SizedBox(height: 20),
-            const Text('VIBRATIONS', style: TextStyle(color: Constant.white, fontSize: 14)),
+            const Text('VIBRATIONS',
+                style: TextStyle(color: Constant.white, fontSize: 14)),
           ],
         ),
       ],

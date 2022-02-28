@@ -35,4 +35,17 @@ class PidginEnglish {
   static const String textOne = 'You fit power your lister/generator from anywhere,\nany time weh you want.';
   static const String textTwo = 'The power button go on/off your generator.';
   static const String textThree = 'The small dot weh dey your power button go let you know if your device dey connected, so make sure say your internet dey on.';
+
+  // Parameter
+  static const String parameterText = 'Generator Parameters';
+  static const String engineRunHours = 'Engine Run Hours:';
+  static const String vibrationLevel = 'Vibration Level:';
+  static const String outputVoltage = 'Output Voltage:';
+  static const String deviceIMEI = 'Device IMEI:';
+  static const String engineStatus = 'Engine Status:';
+  static const String engineOilPressure = 'Engine Oil Pressure:';
+  static const String forSmallPetrolGenerators = 'For Small Petrol Generators:';
+
+  // Timer
+  static const String timerText = 'Generator Runtime';
 }

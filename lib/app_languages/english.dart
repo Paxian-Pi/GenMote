@@ -35,4 +35,18 @@ class English {
   static const String textOne = 'Power your lister/generator from anywhere,\nwhen you need to.';
   static const String textTwo = 'Toggle power button to turn on/off your generator.';
   static const String textThree = 'The little dot on your power button is an indicator that tells if your device is connected, so ensure to turn on your internet.';
+
+  // Parameter
+  static const String parameterText = 'Generator Parameters';
+  static const String engineRunHours = 'Engine Run Hours:';
+  static const String vibrationLevel = 'Vibration Level:';
+  static const String outputVoltage = 'Output Voltage:';
+  static const String deviceIMEI = 'Device IMEI:';
+  static const String engineStatus = 'Engine Status:';
+  static const String engineOilPressure = 'Engine Oil Pressure:';
+  static const String forSmallPetrolGenerators = 'For Small Petrol Generators:';
+
+  // Timer
+  static const String timerText = 'Generator Runtime';
+
 }
