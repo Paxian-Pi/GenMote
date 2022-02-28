@@ -15,6 +15,9 @@ class Constant {
   static const fontSizeSmall = 18.0;
   static const fontSizeSmaller = 16.0;
 
+  // Icon size
+  static const iconSize = 28.0;
+
   // Theme colors
   static const mainColor = Color(0xFF48BF53);
   static const accentColor = Color(0xFF91F086);

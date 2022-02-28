@@ -465,7 +465,7 @@ class _HomeState extends State<Home> {
             child: const Icon(
               Icons.menu_rounded,
               color: Colors.white,
-              size: 30.0,
+              size: Constant.iconSize,
             ),
           ),
           Container(
@@ -482,7 +482,7 @@ class _HomeState extends State<Home> {
           const Icon(
             Icons.wifi_off_outlined,
             color: Colors.white,
-            size: 30.0,
+            size: Constant.iconSize,
           ),
         ],
       ),

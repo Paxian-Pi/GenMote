@@ -84,7 +84,7 @@ class _DeviceTimerState extends State<DeviceTimer> {
             child: const Icon(
               Icons.arrow_back_ios_outlined,
               color: Colors.white,
-              size: 30.0,
+              size: Constant.iconSize,
             ),
           ),
           Container(
@@ -101,7 +101,7 @@ class _DeviceTimerState extends State<DeviceTimer> {
           const Icon(
             Icons.wifi_off_outlined,  // TODO: Switch to wifi_on mode with API
             color: Colors.white,
-            size: 30.0,
+            size: Constant.iconSize,
           ),
         ],
       ),
