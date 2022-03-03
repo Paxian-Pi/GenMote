@@ -46,6 +46,7 @@ dependencies:
   carousel_slider: ^4.0.0
   smooth_page_indicator: ^1.0.0+2
   slide_drawer: ^1.0.3
+  flutter_ringtone_player: ^3.1.1
 
 
 dev_dependencies:

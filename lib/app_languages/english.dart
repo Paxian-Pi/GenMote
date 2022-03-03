@@ -48,5 +48,12 @@ class English {
 
   // Timer
   static const String timerText = 'Generator Runtime';
+  static const String setTime = 'Set Timer';
+  static const String startTime = 'Start Time';
+  static const String stopTime = 'Stop Time';
+  static const String reset = 'Reset';
+  static const String start = 'Start';
+  static const String pause = 'Pause';
+  static const String resume = 'Resume';
 
 }

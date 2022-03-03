@@ -568,12 +568,7 @@ class _HomeState extends State<Home> {
               const SizedBox(height: 100),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    PageTransition(
-                      child: const Home(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
                 },
                 title: Text("HOME", style: textStyle),
                 leading: Icon(Icons.house, color: iconColor),
@@ -581,36 +576,45 @@ class _HomeState extends State<Home> {
               const Divider(height: 0.1),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    PageTransition(
-                      child: const Parameter(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: const Parameter(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  });
                 },
                 title: Text("PARAMETER", style: textStyle),
                 leading: Icon(Icons.inbox, color: iconColor),
               ),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).push(
-                    PageTransition(
-                      child: const DeviceTimer(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: const DeviceTimer(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  });
                 },
                 title: Text("TIMER", style: textStyle),
                 leading: Icon(Icons.timelapse_outlined, color: iconColor),
               ),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    PageTransition(
-                      child: const Locator(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: const Locator(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  });
                 },
                 title: Text("LOCATOR", style: textStyle),
                 leading:
@@ -623,12 +627,15 @@ class _HomeState extends State<Home> {
                   endIndent: 20.0),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    PageTransition(
-                      child: const Devices(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: const Devices(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  });
                 },
                 title: Text("DEVICES", style: textStyle),
                 leading: Icon(Icons.device_hub, color: iconColor),
@@ -640,36 +647,45 @@ class _HomeState extends State<Home> {
                   endIndent: 20.0),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    PageTransition(
-                      child: const Sms(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: const Sms(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  });
                 },
                 title: Text("SMS", style: textStyle),
                 leading: Icon(Icons.sms, color: iconColor),
               ),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    PageTransition(
-                      child: const Profile(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: const Profile(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  });
                 },
                 title: Text("PROFILE", style: textStyle),
                 leading: Icon(Icons.person_add_alt, color: iconColor),
               ),
               ListTile(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    PageTransition(
-                      child: const Settings(),
-                      type: PageTransitionType.fade,
-                    ),
-                  );
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: const Settings(),
+                        type: PageTransitionType.fade,
+                      ),
+                    );
+                  });
                 },
                 title: Text("SETTINGS", style: textStyle),
                 leading: Icon(Icons.settings, color: iconColor),
@@ -681,7 +697,10 @@ class _HomeState extends State<Home> {
                   indent: 20.0,
                   endIndent: 20.0),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context); // Dismiss drawer
+                  Timer(const Duration(milliseconds: 300), () {});
+                },
                 title: const Text("LOGOUT",
                     style: TextStyle(color: Color(0xFFFD2222), fontSize: 16.0)),
                 leading:

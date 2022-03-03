@@ -59,9 +59,7 @@ class _ParameterState extends State<Parameter> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushReplacement(
-          PageTransition(child: const Home(), type: PageTransitionType.rightToLeft),
-        );
+        Navigator.pop(context);
         // return Future.value(true);
         return false;
       },
@@ -100,14 +98,12 @@ class _ParameterState extends State<Parameter> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                PageTransition(child: const Home(), type: PageTransitionType.fade),
-              );
+              Navigator.pop(context);
             },
             child: const Icon(
               Icons.arrow_back_ios_outlined,
               color: Colors.white,
-              size: 30.0,
+              size: Constant.iconSize,
             ),
           ),
           Container(
@@ -124,7 +120,7 @@ class _ParameterState extends State<Parameter> {
           const Icon(
             Icons.wifi_off_outlined,  // TODO: Switch to wifi_on mode with API
             color: Colors.white,
-            size: 30.0,
+            size: Constant.iconSize,
           ),
         ],
       ),

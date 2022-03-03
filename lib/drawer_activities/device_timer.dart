@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:intl/intl.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
@@ -13,17 +17,81 @@ class DeviceTimer extends StatefulWidget {
   _DeviceTimerState createState() => _DeviceTimerState();
 }
 
-class _DeviceTimerState extends State<DeviceTimer> {
-
+class _DeviceTimerState extends State<DeviceTimer>
+    with TickerProviderStateMixin {
   late String timerText;
+  late String setTimer;
+  late String startTime;
+  late String stopTime;
+  late String reset;
+  late String start;
+  late String pause;
+  late String resume;
 
   void _lang() {
     if (Constant.englishLang) {
       timerText = English.timerText;
+      setTimer = English.setTime;
+      startTime = English.startTime;
+      stopTime = English.stopTime;
+      reset = English.reset;
+      start = English.start;
+      pause = English.pause;
+      resume = English.resume;
     }
 
     if (Constant.pidginEnglishLang) {
       timerText = PidginEnglish.timerText;
+      setTimer = PidginEnglish.setTime;
+      startTime = PidginEnglish.startTime;
+      stopTime = PidginEnglish.stopTime;
+      reset = PidginEnglish.reset;
+      start = PidginEnglish.start;
+      pause = PidginEnglish.pause;
+      resume = PidginEnglish.resume;
+    }
+  }
+
+  // var now = DateTime.now();
+  // var formatterDate = DateFormat('dd/MM/yy');
+  // var formatterTime = DateFormat('kk:mm');
+  // String actualDate = formatterDate.format(now);
+  // String actualTime = formatterTime.format(now);
+
+  late AnimationController controller;
+
+  bool isPlaying = false;
+
+  String get countText {
+    Duration count = controller.duration! * controller.value;
+    return controller.isDismissed
+        ? '${(controller.duration!.inHours).toString().padLeft(2, '0')}:${(controller.duration!.inMinutes % 60).toString().padLeft(2, '0')}:${(controller.duration!.inSeconds % 60).toString().padLeft(2, '0')}'
+        : '${(count.inHours).toString().padLeft(2, '0')}:${(count.inMinutes % 60).toString().padLeft(2, '0')}:${(count.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
+
+  String currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+  String shutDownTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+  // String shutDownTime = '00:00';
+
+  late String min;
+  late String hour;
+
+  final now = DateTime.now();
+
+  // String get shutDownTime {
+  //   DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
+  //   DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
+  //
+  //   String formattedHour = DateFormat('HH').format(durationHour);
+  //   String formattedMinutes = DateFormat('mm').format(durationMinutes);
+  //   return '$formattedHour:$formattedMinutes';
+  // }
+
+  double progress = 1.0;
+
+  void _notify() {
+    if (countText == '0:00:00') {
+      FlutterRingtonePlayer.playNotification();
     }
   }
 
@@ -31,15 +99,42 @@ class _DeviceTimerState extends State<DeviceTimer> {
   void initState() {
     super.initState();
     _lang();
+
+    // setState(() {
+    //   if(DateTime.now().minute.toString() != (controller.duration!.inMinutes % 60).toString().padLeft(2, '0')) {
+    //     currentTime = '${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}';
+    //   }
+    // });
+
+    controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 60));
+
+    controller.addListener(() {
+      _notify();
+      if (controller.isAnimating) {
+        setState(() {
+          progress = controller.value;
+        });
+      } else {
+        setState(() {
+          progress = 1.0;
+          isPlaying = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushReplacement(
-          PageTransition(child: const Home(), type: PageTransitionType.rightToLeft),
-        );
+        Navigator.pop(context);
         // return Future.value(true);
         return false;
       },
@@ -65,6 +160,7 @@ class _DeviceTimerState extends State<DeviceTimer> {
     );
   }
 
+  // Main widgets
   Widget _appBar() {
     Size size = MediaQuery.of(context).size;
 
@@ -77,9 +173,7 @@ class _DeviceTimerState extends State<DeviceTimer> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                PageTransition(child: const Home(), type: PageTransitionType.fade),
-              );
+              Navigator.pop(context);
             },
             child: const Icon(
               Icons.arrow_back_ios_outlined,
@@ -99,7 +193,7 @@ class _DeviceTimerState extends State<DeviceTimer> {
             ),
           ),
           const Icon(
-            Icons.wifi_off_outlined,  // TODO: Switch to wifi_on mode with API
+            Icons.wifi_off_outlined, // TODO: Switch to wifi_on mode with API
             color: Colors.white,
             size: Constant.iconSize,
           ),
@@ -142,14 +236,319 @@ class _DeviceTimerState extends State<DeviceTimer> {
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                const SizedBox(height: 30),
+                _setTimer(),
+                const SizedBox(height: 30),
+                _runTime(),
+                const SizedBox(height: 20),
+                _timerView(),
+                const SizedBox(height: 20),
+                _controlButtons(),
+                const SizedBox(height: 30),
 
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       GestureDetector(
+                //         onTap: () {
+                //           if (controller.isAnimating) {
+                //             controller.stop();
+                //             setState(() {
+                //               isPlaying = false;
+                //             });
+                //           } else {
+                //             controller.reverse(
+                //                 from: controller.value == 0 ? 1.0 : controller.value);
+                //             setState(() {
+                //               isPlaying = true;
+                //             });
+                //           }
+                //         },
+                //         child: RoundButton(
+                //           icon: isPlaying == true ? Icons.pause : Icons.play_arrow,
+                //         ),
+                //       ),
+                //       GestureDetector(
+                //         onTap: () {
+                //           controller.reset();
+                //           setState(() {
+                //             isPlaying = false;
+                //           });
+                //         },
+                //         child: RoundButton(
+                //           icon: Icons.stop,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  // Timer activity widgets
+  Widget _setTimer() {
+    return GestureDetector(
+      onTap: () {
+        if (controller.isDismissed) {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => SizedBox(
+              height: 250,
+              child: CupertinoTimerPicker(
+                initialTimerDuration: controller.duration!,
+                onTimerDurationChanged: (time) {
+                  setState(() {
+                    controller.duration = time;
+                  });
+                },
+              ),
+            ),
+          );
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 15),
+        width: 120,
+        height: 40,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Constant.accent,
+            width: 1,
+          ),
+          boxShadow: controller.isDismissed
+              ? const [
+                  BoxShadow(
+                    color: Constant.accent,
+                    blurRadius: 5,
+                    offset: Offset(1, 1),
+                  ),
+                ]
+              : null,
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(5),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              setTimer,
+              textAlign: TextAlign.center,
+              style: controller.isDismissed
+                  ? const TextStyle(color: Constant.mainColor, fontSize: 18)
+                  : const TextStyle(color: Constant.darkGrey, fontSize: 18),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _runTime() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(left: 15),
+          child: Column(
+            children: [
+              Text(currentStartTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(startTime, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
+            ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(right: 15),
+          child: Column(
+            children: [
+              Text(shutDownTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(stopTime, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _timerView() {
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: 280,
+            height: 280,
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.grey.shade300,
+              value: progress,
+              strokeWidth: 10,
+            ),
+          ),
+          AnimatedBuilder(
+            animation: controller,
+            builder: (context, child) => Text(
+              countText,
+              style: const TextStyle(fontSize: 50, fontWeight: FontWeight.w400),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _controlButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: () {
+            controller.reset();
+            setState(() {
+              isPlaying = false;
+            });
+          },
+          child: Container(
+            margin: const EdgeInsets.only(left: 20),
+            width: 120,
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Constant.accent,
+                width: 1,
+              ),
+              // boxShadow: const [
+              //   BoxShadow(
+              //     color: Constant.accent,
+              //     blurRadius: 10,
+              //     offset: Offset(1, 1),
+              //   ),
+              // ],
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  reset,
+                  textAlign: TextAlign.center,
+                  style:
+                      const TextStyle(color: Constant.mainColor, fontSize: 18),
+                ),
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (controller.isAnimating) {
+              controller.stop();
+              setState(() {
+                isPlaying = false;
+              });
+            } else {
+              controller.reverse(from: controller.value == 0
+                  ? 1.0
+                  : controller.value,
+              );
+              setState(() {
+                isPlaying = true;
+                currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+
+                DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
+                DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
+                String formattedHour = DateFormat('HH').format(durationHour);
+                String formattedMinutes = DateFormat('mm').format(durationMinutes);
+
+                int currentHour = int.parse(DateTime.now().hour.toString().padLeft(2, '0'));
+                int currentMinutes = int.parse(DateTime.now().minute.toString().padLeft(2, '0'));
+                int countMinutes = int.parse(countText.substring(3, 5));
+                int countHour = int.parse(countText.substring(0, 2));
+
+                // min = '60';
+                // hour = '24';
+
+                min = '${currentMinutes + countMinutes}';
+                hour = '${currentHour + countHour}';
+
+                if(int.parse(min) >= int.parse('60')) {
+                  int newMin = countMinutes - 1;
+                  int newHour = int.parse(hour) + 1;
+
+                  shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                }
+                else if(int.parse(hour) >= int.parse('24') && int.parse(min) >= int.parse('60')) {
+                  int newMin = countMinutes - 1;
+                  int newHour = 0;
+
+                  shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                }
+                // else if(int.parse(hour) >= int.parse('24')) {
+                //   int newMin = 0;
+                //   int newHour = 0;
+                //
+                //   shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                // }
+                else {
+                  shutDownTime = '$hour:$min';
+                }
+              });
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.only(right: 20),
+            width: 120,
+            height: 40,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Constant.accent,
+                width: 1,
+              ),
+              // boxShadow: const [
+              //   BoxShadow(
+              //     color: Constant.accent,
+              //     blurRadius: 10,
+              //     offset: Offset(1, 1),
+              //   ),
+              // ],
+              color: controller.isDismissed ? Colors.green : Constant.accent,
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                controller.isDismissed
+                    ? Text(
+                        start,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Constant.white, fontSize: 18),
+                      )
+                    : Text(
+                        isPlaying == true ? pause : resume,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            color: Constant.white, fontSize: 18),
+                      ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
