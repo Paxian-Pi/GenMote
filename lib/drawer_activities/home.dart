@@ -761,8 +761,7 @@ class _HomeState extends State<Home> {
                   child: GestureDetector(
                     onTap: () {
                       // TODO: Handle click events here
-                      Methods.showToast(
-                          'Will turn on Generator', ToastGravity.CENTER);
+                      Methods.showToast('Will turn on Generator', ToastGravity.CENTER);
                       HapticFeedback.heavyImpact();
                     },
                     child: Stack(
@@ -784,8 +783,7 @@ class _HomeState extends State<Home> {
                           height: size.height,
                           child: const CircleAvatar(
                             // TODO: Switch images using ternary operator
-                            backgroundImage:
-                                AssetImage('assets/off_no_network.png'),
+                            backgroundImage: AssetImage('assets/off_no_network.png'),
                           ),
                         )),
                       ],

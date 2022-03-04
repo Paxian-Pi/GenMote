@@ -55,4 +55,12 @@ class PidginEnglish {
   static const String start = 'Start';
   static const String pause = 'Pause';
   static const String resume = 'Resume';
+
+  // Locator
+  static const String locatorText = 'Locator';
+
+  // Devices
+  static const String devicesText = 'Connected Devices';
+  static const String addGeneratorText = 'ADD GENERATOR';
+
 }

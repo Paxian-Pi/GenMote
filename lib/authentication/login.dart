@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
   bool _rememberMe = false;
   bool _hideOrShowPassword = true;
 
-  late String welcomeText, loginText, email, password, rememberMe, forgotPassword, signupText;
+  late String welcomeText, loginText, email, password, rememberMe, forgotPassword, signupText, noAccount;
   void _lang() {
     if(Constant.englishLang) {
       welcomeText = English.welcomeBackText;
@@ -32,6 +32,7 @@ class _LoginState extends State<Login> {
       rememberMe = English.rememberMe;
       forgotPassword = English.forgotPassword;
       signupText = English.signupText;
+      noAccount = English.noAccount;
     }
 
     if(Constant.pidginEnglishLang) {
@@ -42,6 +43,7 @@ class _LoginState extends State<Login> {
       rememberMe = PidginEnglish.rememberMe;
       forgotPassword = PidginEnglish.forgotPassword;
       signupText = PidginEnglish.signupText;
+      noAccount = PidginEnglish.noAccount;
     }
   }
 
@@ -473,7 +475,6 @@ class _LoginState extends State<Login> {
   Widget _loginButton() {
     return ElevatedButton(
       onPressed: () {
-        // Methods.showToast('Login clicked!', ToastGravity.CENTER);
 
         Navigator.of(context).pushReplacement(
           PageTransition(
@@ -539,15 +540,14 @@ class _LoginState extends State<Login> {
       children: [
         Container(
           padding: const EdgeInsets.only(right: 45.0),
-          child: const Text(
-            English.noAccount,
-            style: TextStyle(color: Colors.grey, fontSize: 16.0),
+          child: Text(
+            noAccount,
+            style: const TextStyle(color: Colors.grey, fontSize: 16.0),
           ),
         ),
         // InkWell(
         //   onTap: () {
-        //     Methods.showToast(
-        //         'Sign up clicked!', ToastGravity.BOTTOM);
+        //     Methods.showToast('Sign up clicked!', ToastGravity.BOTTOM);
         //   },
         //   child: Container(),
         // ),

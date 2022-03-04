@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:genmote/methods.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:intl/intl.dart';
@@ -17,8 +22,7 @@ class DeviceTimer extends StatefulWidget {
   _DeviceTimerState createState() => _DeviceTimerState();
 }
 
-class _DeviceTimerState extends State<DeviceTimer>
-    with TickerProviderStateMixin {
+class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin {
   late String timerText;
   late String setTimer;
   late String startTime;
@@ -70,6 +74,7 @@ class _DeviceTimerState extends State<DeviceTimer>
   }
 
   String currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+
   String shutDownTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
   // String shutDownTime = '00:00';
 
@@ -90,9 +95,8 @@ class _DeviceTimerState extends State<DeviceTimer>
   double progress = 1.0;
 
   void _notify() {
-    if (countText == '0:00:00') {
-      FlutterRingtonePlayer.playNotification();
-    }
+    FlutterRingtonePlayer.playNotification();
+    HapticFeedback.heavyImpact();
   }
 
   @override
@@ -100,22 +104,21 @@ class _DeviceTimerState extends State<DeviceTimer>
     super.initState();
     _lang();
 
-    // setState(() {
-    //   if(DateTime.now().minute.toString() != (controller.duration!.inMinutes % 60).toString().padLeft(2, '0')) {
-    //     currentTime = '${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}';
-    //   }
-    // });
-
-    controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 60));
+    controller = AnimationController(vsync: this, duration: const Duration(seconds: 0));
 
     controller.addListener(() {
-      _notify();
+      if (countText == '00:00:00') {
+        Timer(const Duration(seconds: 2), () {
+          _notify();
+        });
+      }
+
       if (controller.isAnimating) {
         setState(() {
           progress = controller.value;
         });
-      } else {
+      }
+      else {
         setState(() {
           progress = 1.0;
           isPlaying = false;
@@ -132,6 +135,10 @@ class _DeviceTimerState extends State<DeviceTimer>
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+
+    });
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
@@ -313,6 +320,36 @@ class _DeviceTimerState extends State<DeviceTimer>
               ),
             ),
           );
+
+
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) => SizedBox(
+          //       width: MediaQuery.of(context).size.width * 0.7,
+          //       child: CupertinoAlertDialog(
+          //         title: const Text('Set Timer'),
+          //         content: SizedBox(
+          //           height: 250,
+          //           child: CupertinoTimerPicker(
+          //             initialTimerDuration: controller.duration!,
+          //             onTimerDurationChanged: (time) {
+          //               setState(() {
+          //                 controller.duration = time;
+          //               });
+          //             },
+          //           ),
+          //         ),
+          //         actions: [
+          //           CupertinoDialogAction(
+          //             child: const Text('DONE'),
+          //             onPressed: () => Navigator.of(context).pop(),
+          //           )
+          //         ],
+          //       ),
+          //     )
+          // );
+
+
         }
       },
       child: Container(
@@ -458,7 +495,8 @@ class _DeviceTimerState extends State<DeviceTimer>
               setState(() {
                 isPlaying = false;
               });
-            } else {
+            }
+            else {
               controller.reverse(from: controller.value == 0
                   ? 1.0
                   : controller.value,
@@ -480,29 +518,26 @@ class _DeviceTimerState extends State<DeviceTimer>
                 // min = '60';
                 // hour = '24';
 
+                // min = '${50 + countMinutes}';
+                // hour = '${23 + countHour}';
+
                 min = '${currentMinutes + countMinutes}';
                 hour = '${currentHour + countHour}';
 
-                if(int.parse(min) >= int.parse('60')) {
-                  int newMin = countMinutes - 1;
+                if(int.parse(hour) < 23 &&  int.parse(min) > 59) {
+                  int newMin = countMinutes - (60 - currentMinutes);
                   int newHour = int.parse(hour) + 1;
-
                   shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                 }
-                else if(int.parse(hour) >= int.parse('24') && int.parse(min) >= int.parse('60')) {
-                  int newMin = countMinutes - 1;
+
+                if(int.parse(hour) > 23 && int.parse(min) > 59) {
+                  int newMin = countMinutes - (60 - currentMinutes);
                   int newHour = 0;
-
                   shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                 }
-                // else if(int.parse(hour) >= int.parse('24')) {
-                //   int newMin = 0;
-                //   int newHour = 0;
-                //
-                //   shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
-                // }
-                else {
-                  shutDownTime = '$hour:$min';
+
+                if(int.parse(hour) < 24 && int.parse(min) < 60) {
+                  shutDownTime = '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
                 }
               });
             }

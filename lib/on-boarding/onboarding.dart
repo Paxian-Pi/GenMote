@@ -109,6 +109,7 @@ class _OnBoardingState extends State<OnBoarding> {
                   decoration: gePageDecoration(),
                   footer: ButtonWidget(
                     text: getStartedButtonText,
+                    color: Constant.darkGrey,
                     borderRadius: 10,
                     onClicked: () => _login(context),
                   ),
@@ -192,7 +193,6 @@ class _OnBoardingState extends State<OnBoarding> {
 }
 
 void _login(context) {
-  Methods.showToast('Getting started...', ToastGravity.BOTTOM);
 
   Navigator.of(context).pushReplacement(
     PageTransition(
