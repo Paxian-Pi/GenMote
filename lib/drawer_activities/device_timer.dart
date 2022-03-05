@@ -95,15 +95,17 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
   double progress = 1.0;
 
   void _notify() {
-    // FlutterRingtonePlayer.playNotification();
-    FlutterRingtonePlayer.play(
-      android: AndroidSounds.ringtone,
-      ios: IosSounds.glass,
-      looping: false, // Android only - API >= 28
-      volume: 0.2, // Android only - API >= 28
-      asAlarm: false, // Android only - all APIs
-    );
-    HapticFeedback.vibrate();
+    if(countText == '00:00:00') {
+      // FlutterRingtonePlayer.playNotification();
+      FlutterRingtonePlayer.play(
+        android: AndroidSounds.ringtone,
+        ios: IosSounds.glass,
+        looping: false, // Android only - API >= 28
+        volume: 0.2, // Android only - API >= 28
+        asAlarm: false, // Android only - all APIs
+      );
+      HapticFeedback.vibrate();
+    }
   }
 
   @override
@@ -114,11 +116,8 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
     controller = AnimationController(vsync: this, duration: const Duration(seconds: 0));
 
     controller.addListener(() {
-      if (countText == '00:00:00') {
-        Timer(const Duration(seconds: 2), () {
 
-        });
-      }
+      _notify();
 
       if (controller.isAnimating) {
         setState(() {
@@ -142,11 +141,11 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      if(!isPlaying) {
-        _notify();
-      }
-    });
+    // setState(() {
+    //   if(countText == '00:00:00') {
+    //     _notify();
+    //   }
+    // });
 
     return WillPopScope(
       onWillPop: () async {
