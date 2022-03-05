@@ -95,8 +95,15 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
   double progress = 1.0;
 
   void _notify() {
-    FlutterRingtonePlayer.playNotification();
-    HapticFeedback.heavyImpact();
+    // FlutterRingtonePlayer.playNotification();
+    FlutterRingtonePlayer.play(
+      android: AndroidSounds.ringtone,
+      ios: IosSounds.glass,
+      looping: false, // Android only - API >= 28
+      volume: 0.2, // Android only - API >= 28
+      asAlarm: false, // Android only - all APIs
+    );
+    HapticFeedback.vibrate();
   }
 
   @override
@@ -109,7 +116,7 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
     controller.addListener(() {
       if (countText == '00:00:00') {
         Timer(const Duration(seconds: 2), () {
-          _notify();
+
         });
       }
 
@@ -136,31 +143,37 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     setState(() {
-
+      if(!isPlaying) {
+        _notify();
+      }
     });
 
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
+        FlutterRingtonePlayer.stop();
         // return Future.value(true);
         return false;
       },
-      child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/genmote_main.png"),
-              fit: BoxFit.cover,
+      child: GestureDetector(
+        onTap: () => FlutterRingtonePlayer.stop(),
+        child: Scaffold(
+          body: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/genmote_main.png"),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _appBar(),
-              _timerText(),
-              _timerActivity(),
-            ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _appBar(),
+                _timerText(),
+                _timerActivity(),
+              ],
+            ),
           ),
         ),
       ),
@@ -181,6 +194,7 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
           GestureDetector(
             onTap: () {
               Navigator.pop(context);
+              FlutterRingtonePlayer.stop();
             },
             child: const Icon(
               Icons.arrow_back_ios_outlined,
@@ -530,7 +544,7 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
                   shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                 }
 
-                if(int.parse(hour) > 23 && int.parse(min) > 59) {
+                if(int.parse(hour) >= 23 && int.parse(min) > 59) {
                   int newMin = countMinutes - (60 - currentMinutes);
                   int newHour = 0;
                   shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';

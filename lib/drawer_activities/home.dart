@@ -761,8 +761,8 @@ class _HomeState extends State<Home> {
                   child: GestureDetector(
                     onTap: () {
                       // TODO: Handle click events here
-                      Methods.showToast('Will turn on Generator', ToastGravity.CENTER);
-                      HapticFeedback.heavyImpact();
+                      Methods.showToast('No API yet...', ToastGravity.TOP);
+                      HapticFeedback.vibrate();
                     },
                     child: Stack(
                       alignment: Alignment.center,
