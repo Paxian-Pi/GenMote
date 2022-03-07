@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:genmote/drawer_activities/devices.dart';
+import 'package:genmote/drawer_activities/devices/devices_main.dart';
 import 'package:genmote/drawer_activities/locator.dart';
 import 'package:genmote/drawer_activities/parameter.dart';
 import 'package:genmote/drawer_activities/profile.dart';
@@ -17,6 +17,7 @@ import 'package:genmote/home_page_text/text3.dart';
 import 'package:genmote/methods.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
@@ -130,8 +131,10 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _lang();
+    Methods.wifiConnectivityState();
   }
 
+  bool _isPowerButtonClicked = false;
   bool _loading = true;
   double _vibrations = 0.0;
   double _temperature = 0.0;
@@ -356,6 +359,7 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             _appBar(),
+
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
@@ -479,11 +483,17 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          const Icon(
-            Icons.wifi_off_outlined,
-            color: Colors.white,
-            size: Constant.iconSize,
-          ),
+          Constant.isConnectedToWIFI
+              ? const Icon(
+                  Icons.wifi,
+                  color: Colors.white,
+                  size: Constant.iconSize,
+                )
+              : const Icon(
+                  Icons.wifi_off_outlined,
+                  color: Colors.white,
+                  size: Constant.iconSize,
+                ),
         ],
       ),
     );
@@ -760,9 +770,29 @@ class _HomeState extends State<Home> {
                   height: size.height,
                   child: GestureDetector(
                     onTap: () {
-                      // TODO: Handle click events here
-                      Methods.showToast('No API yet...', ToastGravity.TOP);
+                      // TODO: Handle click events here, for API calls
                       HapticFeedback.vibrate();
+                      Methods.wifiConnectivityState();
+
+                      Timer(const Duration(seconds: 1), () {
+                        setState(() {
+                          if(!Constant.isConnectedToWIFI) {
+                            Methods.showToast('Not connected to WIFI...', ToastGravity.TOP);
+                            return;
+                          }
+
+                          setState(() {
+                            _isPowerButtonClicked = true;
+                          });
+
+                          Timer(const Duration(seconds: 2), () {
+                            setState(() {
+                              _isPowerButtonClicked = false;
+                              Methods.showToast('API required...', ToastGravity.TOP);
+                            });
+                          });
+                        });
+                      });
                     },
                     child: Stack(
                       alignment: Alignment.center,
@@ -781,10 +811,17 @@ class _HomeState extends State<Home> {
                             child: SizedBox(
                           width: size.width,
                           height: size.height,
-                          child: const CircleAvatar(
-                            // TODO: Switch images using ternary operator
-                            backgroundImage: AssetImage('assets/off_no_network.png'),
-                          ),
+                          child: _isPowerButtonClicked
+                              ? const CircleAvatar(
+                                  // TODO: Switch images using ternary operator
+                                  backgroundImage:
+                                      AssetImage('assets/on_no_network.png'),
+                                )
+                              : const CircleAvatar(
+                                  // TODO: Switch images using ternary operator
+                                  backgroundImage:
+                                      AssetImage('assets/off_no_network.png'),
+                                ),
                         )),
                       ],
                     ),

@@ -6,6 +6,10 @@ class Constant {
   static String cardThemePref = "themeColor";
   static bool englishLang = true;
   static bool pidginEnglishLang = false;
+  static bool isConnectedToWIFI = false;
+  static bool isConnectedToMobile = false;
+  static bool hideOrShowPassword = true;
+
 
   // App font sizes
   static const fontSizeLarger = 45.0;

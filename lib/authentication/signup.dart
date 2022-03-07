@@ -489,9 +489,7 @@ class _SignupState extends State<Signup> {
           // ),
         ],
         color: Colors.white,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

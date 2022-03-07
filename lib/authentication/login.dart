@@ -20,7 +20,6 @@ class _LoginState extends State<Login> {
 
   final formKey = GlobalKey<FormState>();
   bool _rememberMe = false;
-  bool _hideOrShowPassword = true;
 
   late String welcomeText, loginText, email, password, rememberMe, forgotPassword, signupText, noAccount;
   void _lang() {
@@ -56,7 +55,7 @@ class _LoginState extends State<Login> {
 
   void _toggleVisibility() {
     setState(() {
-      _hideOrShowPassword = !_hideOrShowPassword;
+      Constant.hideOrShowPassword = !Constant.hideOrShowPassword;
     });
   }
 
@@ -416,13 +415,13 @@ class _LoginState extends State<Login> {
               margin: const EdgeInsets.only(left: 10),
               child: TextFormField(
                 keyboardType: TextInputType.visiblePassword,
-                obscureText: _hideOrShowPassword,
+                obscureText: Constant.hideOrShowPassword,
                 maxLines: 1,
                 decoration: InputDecoration(
                   suffixIcon: GestureDetector(
                     onTap: _toggleVisibility,
                     child: Icon(
-                      _hideOrShowPassword
+                      Constant.hideOrShowPassword
                           ? Icons.visibility
                           : Icons.visibility_off,
                       size: 25.0,

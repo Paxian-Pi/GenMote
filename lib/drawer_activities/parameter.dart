@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
 import '../constants.dart';
+import '../methods.dart';
 
 class Parameter extends StatefulWidget {
   const Parameter({Key? key}) : super(key: key);
@@ -53,6 +54,7 @@ class _ParameterState extends State<Parameter> {
   void initState() {
     super.initState();
     _lang();
+    Methods.wifiConnectivityState();
   }
 
   @override
@@ -117,8 +119,14 @@ class _ParameterState extends State<Parameter> {
               ),
             ),
           ),
-          const Icon(
-            Icons.wifi_off_outlined,  // TODO: Switch to wifi_on mode with API
+          Constant.isConnectedToWIFI
+              ? const Icon(
+            Icons.wifi,
+            color: Colors.white,
+            size: Constant.iconSize,
+          )
+              : const Icon(
+            Icons.wifi_off_outlined,
             color: Colors.white,
             size: Constant.iconSize,
           ),

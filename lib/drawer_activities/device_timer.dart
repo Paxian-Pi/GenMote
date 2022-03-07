@@ -113,6 +113,8 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
     super.initState();
     _lang();
 
+    Methods.wifiConnectivityState();
+
     controller = AnimationController(vsync: this, duration: const Duration(seconds: 0));
 
     controller.addListener(() {
@@ -133,6 +135,8 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
     });
   }
 
+  bool _isStartButtonClicked = false;
+
   @override
   void dispose() {
     controller.dispose();
@@ -141,11 +145,6 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   if(countText == '00:00:00') {
-    //     _notify();
-    //   }
-    // });
 
     return WillPopScope(
       onWillPop: () async {
@@ -212,8 +211,14 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
               ),
             ),
           ),
-          const Icon(
-            Icons.wifi_off_outlined, // TODO: Switch to wifi_on mode with API
+          Constant.isConnectedToWIFI
+              ? const Icon(
+            Icons.wifi,
+            color: Colors.white,
+            size: Constant.iconSize,
+          )
+              : const Icon(
+            Icons.wifi_off_outlined,
             color: Colors.white,
             size: Constant.iconSize,
           ),
@@ -318,6 +323,8 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
   Widget _setTimer() {
     return GestureDetector(
       onTap: () {
+        HapticFeedback.vibrate();
+
         if (controller.isDismissed) {
           showModalBottomSheet(
             context: context,
@@ -333,7 +340,6 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
               ),
             ),
           );
-
 
           // showDialog(
           //     context: context,
@@ -361,7 +367,6 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
           //       ),
           //     )
           // );
-
 
         }
       },
@@ -462,6 +467,7 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
       children: [
         GestureDetector(
           onTap: () {
+            HapticFeedback.vibrate();
             controller.reset();
             setState(() {
               isPlaying = false;
@@ -503,57 +509,83 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
         ),
         GestureDetector(
           onTap: () {
-            if (controller.isAnimating) {
-              controller.stop();
+
+            HapticFeedback.vibrate();
+            Methods.wifiConnectivityState();
+
+            Timer(const Duration(seconds: 1), () {
               setState(() {
-                isPlaying = false;
+                if(!Constant.isConnectedToWIFI) {
+                  Methods.showToast('Not connected to WIFI...', ToastGravity.CENTER);
+                  return;
+                }
+
+                setState(() {
+                  _isStartButtonClicked = true;
+                });
+
+                Timer(const Duration(seconds: 2), () {
+                  setState(() {
+                    _isStartButtonClicked = false;
+                  });
+                });
+
+
+
+                if (controller.isAnimating) {
+                  controller.stop();
+                  setState(() {
+                    isPlaying = false;
+                  });
+                }
+                else {
+                  controller.reverse(from: controller.value == 0
+                      ? 1.0
+                      : controller.value,
+                  );
+
+                  setState(() {
+                    isPlaying = true;
+                    currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+
+                    DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
+                    DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
+                    String formattedHour = DateFormat('HH').format(durationHour);
+                    String formattedMinutes = DateFormat('mm').format(durationMinutes);
+
+                    int currentHour = int.parse(DateTime.now().hour.toString().padLeft(2, '0'));
+                    int currentMinutes = int.parse(DateTime.now().minute.toString().padLeft(2, '0'));
+                    int countMinutes = int.parse(countText.substring(3, 5));
+                    int countHour = int.parse(countText.substring(0, 2));
+
+                    // min = '60';
+                    // hour = '24';
+
+                    // min = '${50 + countMinutes}';
+                    // hour = '${23 + countHour}';
+
+                    min = '${currentMinutes + countMinutes}';
+                    hour = '${currentHour + countHour}';
+
+                    if(int.parse(hour) < 23 &&  int.parse(min) > 59) {
+                      int newMin = countMinutes - (60 - currentMinutes);
+                      int newHour = int.parse(hour) + 1;
+                      shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                    }
+
+                    if(int.parse(hour) >= 23 && int.parse(min) > 59) {
+                      int newMin = countMinutes - (60 - currentMinutes);
+                      int newHour = 0;
+                      shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                    }
+
+                    if(int.parse(hour) < 24 && int.parse(min) < 60) {
+                      shutDownTime = '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
+                    }
+                  });
+                }
               });
-            }
-            else {
-              controller.reverse(from: controller.value == 0
-                  ? 1.0
-                  : controller.value,
-              );
-              setState(() {
-                isPlaying = true;
-                currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
-
-                DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
-                DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
-                String formattedHour = DateFormat('HH').format(durationHour);
-                String formattedMinutes = DateFormat('mm').format(durationMinutes);
-
-                int currentHour = int.parse(DateTime.now().hour.toString().padLeft(2, '0'));
-                int currentMinutes = int.parse(DateTime.now().minute.toString().padLeft(2, '0'));
-                int countMinutes = int.parse(countText.substring(3, 5));
-                int countHour = int.parse(countText.substring(0, 2));
-
-                // min = '60';
-                // hour = '24';
-
-                // min = '${50 + countMinutes}';
-                // hour = '${23 + countHour}';
-
-                min = '${currentMinutes + countMinutes}';
-                hour = '${currentHour + countHour}';
-
-                if(int.parse(hour) < 23 &&  int.parse(min) > 59) {
-                  int newMin = countMinutes - (60 - currentMinutes);
-                  int newHour = int.parse(hour) + 1;
-                  shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
-                }
-
-                if(int.parse(hour) >= 23 && int.parse(min) > 59) {
-                  int newMin = countMinutes - (60 - currentMinutes);
-                  int newHour = 0;
-                  shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
-                }
-
-                if(int.parse(hour) < 24 && int.parse(min) < 60) {
-                  shutDownTime = '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
-                }
-              });
-            }
+            });
           },
           child: Container(
             margin: const EdgeInsets.only(right: 20),

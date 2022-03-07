@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/button_widget.dart';
+import 'package:genmote/drawer_activities/devices/device_info.dart';
 import 'package:genmote/methods.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-import '../app_languages/english.dart';
-import '../app_languages/pidginEnglish.dart';
-import '../constants.dart';
+import '../../app_languages/english.dart';
+import '../../app_languages/pidginEnglish.dart';
+import '../../constants.dart';
 
 class Devices extends StatefulWidget {
   const Devices({Key? key}) : super(key: key);
@@ -50,6 +52,7 @@ class _DevicesState extends State<Devices> {
   void initState() {
     super.initState();
     _lang();
+    Methods.wifiConnectivityState();
   }
 
   @override
@@ -114,8 +117,14 @@ class _DevicesState extends State<Devices> {
               ),
             ),
           ),
-          const Icon(
-            Icons.wifi_off_outlined, // TODO: Switch to wifi_on mode with API
+          Constant.isConnectedToWIFI
+              ? const Icon(
+            Icons.wifi,
+            color: Colors.white,
+            size: Constant.iconSize,
+          )
+              : const Icon(
+            Icons.wifi_off_outlined,
             color: Colors.white,
             size: Constant.iconSize,
           ),
@@ -186,7 +195,10 @@ class _DevicesState extends State<Devices> {
           borderRadius: 10,
           text: addGeneratorText,
           color: Constant.accent,
-          onClicked: _addDeviceWidget,
+          // onClicked: _addDeviceWidget,
+          onClicked: () => Navigator.of(context).push(
+            PageTransition(child: const DeviceInfo(), type: PageTransitionType.fade),
+          ),
         ),
       ),
     );

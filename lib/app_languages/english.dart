@@ -63,4 +63,24 @@ class English {
   static const String devicesText = 'Connected Devices';
   static const String addGeneratorText = 'ADD GENERATOR';
 
+  // Device Information
+  static const String deviceInfoText = 'Generator 1';
+  static const String deviceInfoButton = 'DEVICE INFORMATION';
+  static const String grantAccessButton = 'GRANT ACCESS';
+  static const String deleteGenerator = 'DELETE GENERATOR';
+  static const String backButton = 'BACK';
+
+  static const String status = 'STATUS';
+  static const String deviceName = 'DEVICE NAME';
+  static const String duration = 'DURATION';
+  static const String runTime = 'RUN TIME';
+  static const String fuelUsage = 'FUEL GUAGE';
+  static const String oilUsage = 'OIL USAGE';
+  static const String vibration = 'VIBRATION';
+  static const String temperature = 'TEMPERATURE';
+  static const String imeiNumber = 'IMEI NUMBER';
+  static const String icciNumber = 'ICCDI NUMBER';
+  static const String phone = 'PHONE NUMBER';
+  static const String dateAdded = 'DATE ADDED';
+
 }
