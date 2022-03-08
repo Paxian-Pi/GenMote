@@ -191,6 +191,9 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.vibrate();
+              SystemSound.play(SystemSoundType.click);
+
               Navigator.pop(context);
               FlutterRingtonePlayer.stop();
             },
@@ -324,6 +327,7 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
     return GestureDetector(
       onTap: () {
         HapticFeedback.vibrate();
+        SystemSound.play(SystemSoundType.click);
 
         if (controller.isDismissed) {
           showModalBottomSheet(
@@ -468,6 +472,8 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
         GestureDetector(
           onTap: () {
             HapticFeedback.vibrate();
+            SystemSound.play(SystemSoundType.click);
+
             controller.reset();
             setState(() {
               isPlaying = false;
@@ -511,6 +517,8 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
           onTap: () {
 
             HapticFeedback.vibrate();
+            SystemSound.play(SystemSoundType.click);
+
             Methods.wifiConnectivityState();
 
             Timer(const Duration(seconds: 1), () {

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:genmote/drawer_activities/home.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -100,6 +101,9 @@ class _ParameterState extends State<Parameter> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.vibrate();
+              SystemSound.play(SystemSoundType.click);
+
               Navigator.pop(context);
             },
             child: const Icon(

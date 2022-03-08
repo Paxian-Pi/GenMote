@@ -64,7 +64,7 @@ class PidginEnglish {
   static const String addGeneratorText = 'ADD GENERATOR';
 
   // Device Information
-  static const String deviceInfoText = 'Generator 1';
+  static const String deviceInfoText = 'Main Generator';
   static const String deviceInfoButton = 'DEVICE INFORMATION';
   static const String grantAccessButton = 'GRANT ACCESS';
   static const String deleteGenerator = 'DELETE GENERATOR';
@@ -82,5 +82,16 @@ class PidginEnglish {
   static const String icciNumber = 'ICCDI NUMBER';
   static const String phone = 'PHONE NUMBER';
   static const String dateAdded = 'DATE ADDED';
+  static const String receiverEmail = 'Receiver Email';
+  static const String send = 'SEND';
+  static const String cancel = 'CANCEL';
+  static const String securityPassTitle = 'Security Pass';
+  static const String securityPassText = 'In order to be sure you made this request to grant 3rd party access to your device, please enter the code sent to your personal number, this is to ensure your device is secured.';
+  static const String haveNotReceivedCode = 'Haven’t received a code?';
+  static const String sendAgain = 'Request Again';
+  static const String tryAgain = 'Try Again';
+  static const String wrongPassword = 'Wrong PIN!';
+  static const String linkSentText = 'We don send link to the email weh you enter.';
+  static const String done = 'DONE';
 
 }

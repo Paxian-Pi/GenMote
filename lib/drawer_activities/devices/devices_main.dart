@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/button_widget.dart';
 import 'package:genmote/drawer_activities/devices/device_info.dart';
@@ -98,6 +99,9 @@ class _DevicesState extends State<Devices> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.vibrate();
+              SystemSound.play(SystemSoundType.click);
+
               Navigator.pop(context);
             },
             child: const Icon(

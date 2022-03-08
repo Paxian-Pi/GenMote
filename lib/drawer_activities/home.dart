@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -143,6 +144,8 @@ class _HomeState extends State<Home> {
   final controller = CarouselController();
 
   final PageController _pageController = PageController(initialPage: 1);
+
+  final _audioPlayer = AudioCache();
 
   // final List<String> imgList = [
   //   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -464,6 +467,9 @@ class _HomeState extends State<Home> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.vibrate();
+              SystemSound.play(SystemSoundType.click);
+
               scaffoldKey.currentState?.openDrawer();
             },
             child: const Icon(
@@ -772,6 +778,8 @@ class _HomeState extends State<Home> {
                     onTap: () {
                       // TODO: Handle click events here, for API calls
                       HapticFeedback.vibrate();
+                      SystemSound.play(SystemSoundType.click);
+
                       Methods.wifiConnectivityState();
 
                       Timer(const Duration(seconds: 1), () {

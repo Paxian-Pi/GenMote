@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../app_languages/english.dart';
@@ -75,6 +76,9 @@ class _LocatorState extends State<Locator> {
         children: [
           GestureDetector(
             onTap: () {
+              HapticFeedback.vibrate();
+              SystemSound.play(SystemSoundType.click);
+
               Navigator.pop(context);
             },
             child: const Icon(
