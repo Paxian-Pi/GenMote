@@ -1077,14 +1077,20 @@ class _DeviceInfoState extends State<DeviceInfo> {
   }
 
   Widget _accessLinkSentWidgets() {
-    return Column(
-      children: [
-        _linkSentImage(),
-        const SizedBox(height: 30),
-        _linkSentText(),
-        const SizedBox(height: 50),
-        _doneButton(),
-      ],
+    return ScaleAnimatedWidget.tween(
+      enabled: true,
+      duration: const Duration(milliseconds: 300),
+      scaleDisabled: 0.5,
+      scaleEnabled: 1,
+      child: Column(
+        children: [
+          _linkSentImage(),
+          const SizedBox(height: 30),
+          _linkSentText(),
+          const SizedBox(height: 50),
+          _doneButton(),
+        ],
+      ),
     );
   }
 
