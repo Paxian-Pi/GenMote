@@ -1,5 +1,10 @@
 import 'dart:async';
 
+import 'package:animated_widgets/widgets/opacity_animated.dart';
+import 'package:animated_widgets/widgets/rotation_animated.dart';
+import 'package:animated_widgets/widgets/scale_animated.dart';
+import 'package:animated_widgets/widgets/shake_animated_widget.dart';
+import 'package:animated_widgets/widgets/translation_animated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +56,9 @@ class _DeviceInfoState extends State<DeviceInfo> {
   late String wrongPassword;
   late String linkSentText;
   late String done;
+  late String confirm;
+  late String confirmActionText;
+  late String areYouSure;
 
   void _lang() {
     if (Constant.englishLang) {
@@ -84,6 +92,9 @@ class _DeviceInfoState extends State<DeviceInfo> {
       wrongPassword = English.wrongPassword;
       linkSentText = English.linkSentText;
       done = English.done;
+      confirm = English.confirm;
+      confirmActionText = English.confirmActionText;
+      areYouSure = English.areYouSure;
     }
 
     if (Constant.pidginEnglishLang) {
@@ -117,6 +128,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
       wrongPassword = PidginEnglish.wrongPassword;
       linkSentText = PidginEnglish.linkSentText;
       done = PidginEnglish.done;
+      confirmActionText = PidginEnglish.confirmActionText;
+      areYouSure = PidginEnglish.areYouSure;
     }
   }
 
@@ -884,19 +897,21 @@ class _DeviceInfoState extends State<DeviceInfo> {
         focusNode: _focusNode,
         onCompleted: (pin) {
           if (pin == '1706') {
-            setState(() {
-              // isPINCorrect = true;
-              isAccessGranted = true;
-            });
-
-            if (isAccessGranted) {
-              Timer(const Duration(milliseconds: 3500), () {
-                setState(() {
-                  isPINCorrect = true;
-                  isSecurityPassWidget = false;
-                });
+            Timer(const Duration(milliseconds: 500), () {
+              setState(() {
+                // isPINCorrect = true;
+                isAccessGranted = true;
               });
-            }
+
+              if (isAccessGranted) {
+                Timer(const Duration(milliseconds: 3500), () {
+                  setState(() {
+                    isPINCorrect = true;
+                    isSecurityPassWidget = false;
+                  });
+                });
+              }
+            });
           } else {
             setState(() {
               // isPINCorrect = false;
@@ -1157,78 +1172,172 @@ class _DeviceInfoState extends State<DeviceInfo> {
 
     showDialog(
       context: context,
-      builder: (context) => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 250),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-            bottomLeft: Radius.circular(20),
-          ),
-        ),
-        child: Container(
-          margin: const EdgeInsets.only(left: 20, right: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Oops',
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                    fontFamily: 'Delius',
-                    decoration: TextDecoration.none),
+      // builder: (context) => TranslationAnimatedWidget(
+      //   values: const [
+      //     Offset(0, 200), // disabled value value
+      //     Offset(0, 250), //intermediate value
+      //     Offset(0, 0) //enabled value
+      //   ],
+      //   child: Container(
+      //     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 250),
+      //     decoration: const BoxDecoration(
+      //       color: Colors.white,
+      //       borderRadius: BorderRadius.only(
+      //         topLeft: Radius.circular(20),
+      //         topRight: Radius.circular(20),
+      //         bottomRight: Radius.circular(20),
+      //         bottomLeft: Radius.circular(20),
+      //       ),
+      //     ),
+      //     child: Container(
+      //       margin: const EdgeInsets.only(left: 20, right: 10),
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           const SizedBox(height: 20),
+      //           const Text(
+      //             'Oops',
+      //             style: TextStyle(
+      //                 color: Colors.red,
+      //                 fontSize: 20,
+      //                 fontFamily: 'Delius',
+      //                 decoration: TextDecoration.none),
+      //           ),
+      //           const SizedBox(height: 10),
+      //           Text(
+      //             wrongPassword,
+      //             style: const TextStyle(
+      //                 color: Colors.grey,
+      //                 fontSize: 18,
+      //                 fontFamily: 'Delius',
+      //                 decoration: TextDecoration.none),
+      //           ),
+      //           const SizedBox(height: 100),
+      //           GestureDetector(
+      //             onTap: () {
+      //               HapticFeedback.vibrate();
+      //               SystemSound.play(SystemSoundType.click);
+      //
+      //               Navigator.pop(context);
+      //               Timer(const Duration(milliseconds: 500), () => _focusNode.requestFocus());
+      //             },
+      //             child: Center(
+      //               child: Container(
+      //                 width: 150,
+      //                 height: 40,
+      //                 decoration: BoxDecoration(
+      //                   border: Border.all(
+      //                     color: Colors.red,
+      //                     width: 1,
+      //                   ),
+      //                   color: Colors.red,
+      //                   borderRadius: const BorderRadius.all(Radius.circular(5)),
+      //                 ),
+      //                 child: Column(
+      //                   mainAxisAlignment: MainAxisAlignment.center,
+      //                   children: [
+      //                     Text(
+      //                       tryAgain,
+      //                       textAlign: TextAlign.center,
+      //                       style: const TextStyle(
+      //                           color: Colors.white,
+      //                           fontSize: 14,
+      //                           decoration: TextDecoration.none),
+      //                     ),
+      //                   ],
+      //                 ),
+      //               ),
+      //             ),
+      //           )
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      builder: (context) => ShakeAnimatedWidget(
+        duration: const Duration(milliseconds: 1500),
+        shakeAngle: Rotation.deg(z: 2),
+        curve: Curves.linear,
+        child: TranslationAnimatedWidget(
+          values: const [
+            Offset(0, 200), // disabled value value
+            Offset(0, 250), //intermediate value
+            Offset(0, 0) //enabled value
+          ],
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 290),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
               ),
-              const SizedBox(height: 10),
-              Text(
-                wrongPassword,
-                style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 18,
-                    fontFamily: 'Delius',
-                    decoration: TextDecoration.none),
-              ),
-              const SizedBox(height: 100),
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  SystemSound.play(SystemSoundType.click);
-
-                  Navigator.pop(context);
-                  Timer(const Duration(milliseconds: 500), () => _focusNode.requestFocus());
-                },
-                child: Center(
-                  child: Container(
-                    width: 150,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(
+            ),
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Oops',
+                    style: TextStyle(
                         color: Colors.red,
-                        width: 1,
-                      ),
-                      color: Colors.red,
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          tryAgain,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              decoration: TextDecoration.none),
-                        ),
-                      ],
-                    ),
+                        fontSize: 20,
+                        fontFamily: 'Delius',
+                        decoration: TextDecoration.none),
                   ),
-                ),
-              )
-            ],
+                  const SizedBox(height: 10),
+                  Text(
+                    wrongPassword,
+                    style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontFamily: 'Delius',
+                        decoration: TextDecoration.none),
+                  ),
+                  const SizedBox(height: 50),
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      SystemSound.play(SystemSoundType.click);
+
+                      Navigator.pop(context);
+                      Timer(const Duration(milliseconds: 500), () => _focusNode.requestFocus());
+                    },
+                    child: Center(
+                      child: Container(
+                        width: 150,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.red,
+                            width: 1,
+                          ),
+                          color: Colors.red,
+                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              tryAgain,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  decoration: TextDecoration.none),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -1238,43 +1347,169 @@ class _DeviceInfoState extends State<DeviceInfo> {
   void _showAlertDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: Container(
-          margin:
-              const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
-          width: 100,
-          height: 100,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/error_info.png"),
-              fit: BoxFit.cover,
+      // builder: (context) => CupertinoAlertDialog(
+      //   title: Container(
+      //     margin:
+      //         const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+      //     width: 100,
+      //     height: 100,
+      //     decoration: const BoxDecoration(
+      //       image: DecorationImage(
+      //         image: AssetImage("assets/error_info.png"),
+      //         fit: BoxFit.cover,
+      //       ),
+      //     ),
+      //   ),
+      //   content: const Text('Are you sure?', style: TextStyle(fontSize: 18)),
+      //   actions: [
+      //     CupertinoDialogAction(
+      //       child: const Text('CONFIRM', style: TextStyle(color: Colors.red)),
+      //       onPressed: () {
+      //         HapticFeedback.vibrate();
+      //         SystemSound.play(SystemSoundType.click);
+      //
+      //         Navigator.of(context).pop();
+      //
+      //         //TODO: Call API to delete generator from database!
+      //         _confirmDialog(context);
+      //       },
+      //     ),
+      //     CupertinoDialogAction(
+      //       child: const Text('CANCEL', style: TextStyle(color: Colors.grey)),
+      //       onPressed: () {
+      //         HapticFeedback.vibrate();
+      //         SystemSound.play(SystemSoundType.click);
+      //
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // ),
+      builder: (context) => ShakeAnimatedWidget(
+        enabled: true,
+        duration: const Duration(milliseconds: 1500),
+        shakeAngle: Rotation.deg(z: 1),
+        curve: Curves.linear,
+        child: TranslationAnimatedWidget(
+          values: const [
+            Offset(0, 200), // disabled value value
+            Offset(0, 250), //intermediate value
+            Offset(0, 0) //enabled value
+          ],
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 230),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+              ),
+            ),
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    margin:
+                    const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/error_info.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Text(areYouSure, style: const TextStyle(color: Colors.grey, fontSize: 18, decoration: TextDecoration.none)),
+                  const SizedBox(height: 70),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.vibrate();
+                          SystemSound.play(SystemSoundType.click);
+
+                          Navigator.pop(context);
+
+                          //TODO: Call API to delete generator from database!
+                          _confirmDialog(context);
+                        },
+                        child: Center(
+                          child: Container(
+                            width: 150,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.red,
+                                width: 1,
+                              ),
+                              color: Colors.red,
+                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  confirm,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.vibrate();
+                          SystemSound.play(SystemSoundType.click);
+
+                          Navigator.pop(context);
+                        },
+                        child: Center(
+                          child: Container(
+                            width: 150,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  cancel,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
-        content: const Text('Are you sure?', style: TextStyle(fontSize: 18)),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('CONFIRM', style: TextStyle(color: Colors.red)),
-            onPressed: () {
-              HapticFeedback.vibrate();
-              SystemSound.play(SystemSoundType.click);
-
-              Navigator.of(context).pop();
-
-              //TODO: Call API to delete generator from database!
-              _confirmDialog(context);
-            },
-          ),
-          CupertinoDialogAction(
-            child: const Text('CANCEL', style: TextStyle(color: Colors.grey)),
-            onPressed: () {
-              HapticFeedback.vibrate();
-              SystemSound.play(SystemSoundType.click);
-
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
       ),
     );
   }
@@ -1282,84 +1517,245 @@ class _DeviceInfoState extends State<DeviceInfo> {
   void _confirmDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: const Text('Please enter your password to confirm this action!',
-            style: TextStyle(fontSize: 18)),
-        content: Container(
-          width: double.infinity,
-          height: 70,
-          margin: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 20,
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 5,
-            vertical: 5,
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Constant.accent,
-              width: 1,
-            ),
-            // boxShadow: const [
-            //   BoxShadow(
-            //     color: Constant.accent,
-            //     blurRadius: 10,
-            //     offset: Offset(1, 1),
-            //   ),
-            // ],
+      // builder: (context) => CupertinoAlertDialog(
+      //   title: const Text('Please enter your password to confirm this action!', style: TextStyle(fontSize: 18)),
+      //   content: Container(
+      //     width: double.infinity,
+      //     height: 70,
+      //     margin: const EdgeInsets.symmetric(
+      //       horizontal: 20,
+      //       vertical: 20,
+      //     ),
+      //     padding: const EdgeInsets.symmetric(
+      //       horizontal: 5,
+      //       vertical: 5,
+      //     ),
+      //     decoration: BoxDecoration(
+      //       border: Border.all(
+      //         color: Constant.accent,
+      //         width: 1,
+      //       ),
+      //       // boxShadow: const [
+      //       //   BoxShadow(
+      //       //     color: Constant.accent,
+      //       //     blurRadius: 10,
+      //       //     offset: Offset(1, 1),
+      //       //   ),
+      //       // ],
+      //       color: Colors.white,
+      //       borderRadius: const BorderRadius.all(
+      //         Radius.circular(5),
+      //       ),
+      //     ),
+      //     child: Expanded(
+      //       child: Card(
+      //         child: TextFormField(
+      //           keyboardType: TextInputType.visiblePassword,
+      //           obscureText: _hideOrShowPassword,
+      //           maxLines: 1,
+      //           decoration: InputDecoration(
+      //             suffixIcon: GestureDetector(
+      //               onTap: _toggleVisibility,
+      //               child: Icon(
+      //                 _hideOrShowPassword
+      //                     ? Icons.visibility
+      //                     : Icons.visibility_off,
+      //                 size: 25.0,
+      //                 color: Constant.grey,
+      //               ),
+      //             ),
+      //             label: const Text('Password'),
+      //             border: const OutlineInputBorder(borderSide: BorderSide()),
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      //   actions: [
+      //     CupertinoDialogAction(
+      //       child: const Text('CANCEL', style: TextStyle(color: Colors.grey)),
+      //       onPressed: () {
+      //         HapticFeedback.vibrate();
+      //         SystemSound.play(SystemSoundType.click);
+      //
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //     CupertinoDialogAction(
+      //       child: const Text('DONE', style: TextStyle(color: Colors.red)),
+      //       onPressed: () {
+      //         HapticFeedback.vibrate();
+      //         SystemSound.play(SystemSoundType.click);
+      //
+      //         Navigator.of(context).pop();
+      //
+      //         //TODO: Call API to actually delete generator from database!
+      //         _successfullyDeleted(context);
+      //       },
+      //     ),
+      //   ],
+      // ),
+
+
+
+      builder: (context) => ScaleAnimatedWidget.tween(
+        enabled: true,
+        duration: const Duration(milliseconds: 300),
+        scaleDisabled: 0.5,
+        scaleEnabled: 1,
+        child:
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 230),
+          decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(5),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
             ),
           ),
-          child: Expanded(
-            child: Card(
-              child: TextFormField(
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: _hideOrShowPassword,
-                maxLines: 1,
-                decoration: InputDecoration(
-                  suffixIcon: GestureDetector(
-                    onTap: _toggleVisibility,
-                    child: Icon(
-                      _hideOrShowPassword
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      size: 25.0,
-                      color: Constant.grey,
+          child: Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Text(confirmActionText, style: const TextStyle(color: Colors.grey, fontSize: 18, decoration: TextDecoration.none)),
+                const SizedBox(height: 50),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Icon(Icons.password_outlined),
+                //     Material(
+                //       child: Container(
+                //         child: TextFormField(
+                //           keyboardType: TextInputType.visiblePassword,
+                //           obscureText: Constant.hideOrShowPassword,
+                //           maxLines: 1,
+                //           decoration: InputDecoration(
+                //             suffixIcon: GestureDetector(
+                //               onTap: _toggleVisibility,
+                //               child: Icon(
+                //                 Constant.hideOrShowPassword
+                //                     ? Icons.visibility
+                //                     : Icons.visibility_off,
+                //                 size: 25.0,
+                //                 color: Constant.grey,
+                //               ),
+                //             ),
+                //             label: Text(password),
+                //             border: InputBorder.none,
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                Material(
+                  child: TextFormField(
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      // suffixIcon: GestureDetector(
+                      //   onTap: _toggleVisibility,
+                      //   child: Icon(
+                      //     _hideOrShowPassword
+                      //         ? Icons.visibility
+                      //         : Icons.visibility_off,
+                      //     size: 25.0,
+                      //     color: Constant.grey,
+                      //   ),
+                      // ),
+                      label: Text(password),
+                      border: const OutlineInputBorder(borderSide: BorderSide()),
                     ),
                   ),
-                  label: const Text('Password'),
-                  border: const OutlineInputBorder(borderSide: BorderSide()),
                 ),
-              ),
+                const SizedBox(height: 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        HapticFeedback.vibrate();
+                        SystemSound.play(SystemSoundType.click);
+
+                        Navigator.pop(context);
+                      },
+                      child: Center(
+                        child: Container(
+                          width: 150,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                            color: Colors.white,
+                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                cancel,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    decoration: TextDecoration.none),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        HapticFeedback.vibrate();
+                        SystemSound.play(SystemSoundType.click);
+
+                        Navigator.pop(context);
+
+                        //TODO: Call API to delete generator from database!
+                        _successfullyDeleted(context);
+                      },
+                      child: Center(
+                        child: Container(
+                          width: 150,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.red,
+                              width: 1,
+                            ),
+                            color: Colors.red,
+                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                done,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    decoration: TextDecoration.none),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
         ),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('CANCEL', style: TextStyle(color: Colors.grey)),
-            onPressed: () {
-              HapticFeedback.vibrate();
-              SystemSound.play(SystemSoundType.click);
-
-              Navigator.of(context).pop();
-            },
-          ),
-          CupertinoDialogAction(
-            child: const Text('DONE', style: TextStyle(color: Colors.red)),
-            onPressed: () {
-              HapticFeedback.vibrate();
-              SystemSound.play(SystemSoundType.click);
-
-              Navigator.of(context).pop();
-
-              //TODO: Call API to actually delete generator from database!
-              _successfullyDeleted(context);
-            },
-          ),
-        ],
       ),
     );
   }

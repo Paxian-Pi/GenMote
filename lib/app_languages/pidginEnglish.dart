@@ -93,5 +93,8 @@ class PidginEnglish {
   static const String wrongPassword = 'Wrong PIN!';
   static const String linkSentText = 'We don send link to the email weh you enter.';
   static const String done = 'DONE';
+  static const String confirm = 'CONFIRM';
+  static const String confirmActionText = 'Please enter your password to confirm this action!';
+  static const String areYouSure = 'Are you sure?';
 
 }

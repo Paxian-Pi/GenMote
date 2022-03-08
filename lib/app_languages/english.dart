@@ -93,4 +93,7 @@ class English {
   static const String wrongPassword = 'Wrong PIN!';
   static const String linkSentText = 'Link has been sent to the receiver’s email.';
   static const String done = 'DONE';
+  static const String confirm = 'CONFIRM';
+  static const String confirmActionText = 'Please enter your password to confirm this action!';
+  static const String areYouSure = 'Are you sure?';
 }
