@@ -917,10 +917,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
           style: const TextStyle(color: Colors.grey, fontSize: 16.0),
         ),
         TextButton(
-          onPressed: () {
-            HapticFeedback.vibrate();
-            SystemSound.play(SystemSoundType.click);
-          },
+          onPressed: () {},
           child: Text(
             sendAgain,
             style: const TextStyle(color: Constant.accent, fontSize: 16.0),

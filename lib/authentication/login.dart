@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/app_languages/pidginEnglish.dart';
 import 'package:genmote/authentication/signup.dart';
@@ -475,9 +474,6 @@ class _LoginState extends State<Login> {
   Widget _loginButton() {
     return ElevatedButton(
       onPressed: () {
-        HapticFeedback.vibrate();
-        SystemSound.play(SystemSoundType.click);
-
         Navigator.of(context).pushReplacement(
           PageTransition(
             child: const Home(),
@@ -565,9 +561,6 @@ class _LoginState extends State<Login> {
           // ),
           child: TextButton(
             onPressed: () {
-              HapticFeedback.vibrate();
-              SystemSound.play(SystemSoundType.click);
-
               Navigator.of(context).push(
                 PageTransition(
                   child: const Signup(),

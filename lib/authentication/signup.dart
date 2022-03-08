@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/authentication/login.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -693,8 +692,6 @@ class _SignupState extends State<Signup> {
     return ElevatedButton(
       onPressed: () {
         // Methods.showToast('Signup clicked!', ToastGravity.CENTER);
-        HapticFeedback.vibrate();
-        SystemSound.play(SystemSoundType.click);
 
         Navigator.of(context).pushReplacement(
           PageTransition(
@@ -784,9 +781,6 @@ class _SignupState extends State<Signup> {
           // ),
           child: TextButton(
             onPressed: () {
-              HapticFeedback.vibrate();
-              SystemSound.play(SystemSoundType.click);
-
               Methods.showToast('Login clicked!', ToastGravity.CENTER);
             },
             child: Text(
