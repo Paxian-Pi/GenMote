@@ -104,5 +104,20 @@ class English {
   static const String totalSimCard = 'TOTAL SIM CARDS';
   static const String connectedToDevice = 'Connected To Device';
   static const String availableForConnection = 'Available For Connection';
+  static const String whatIsYourSIMType = 'What\'s your SIM type?';
+  static const String personalSIM = 'PERSONAL SIM';
+  static const String isSIMRegistered = 'Is your SIM registered?';
+  static const String addYourIMEINumber = 'Add your IMEI number';
+  static const String addYourICCIDNumber = 'Add your SIM Card ICCID number';
+  static const String addYourNationalIDNumber = 'Add your National Identity Number';
+  static const String submit = 'SUBMIT';
+  static const String confirmYourDetails = 'Please confirm your details!';
+  static const String continueRegistration = 'Click "Yes" to continue registration with these details!';
+  static const String username = 'NAME';
+  static const String address = 'ADDRESS';
+  static const String dateOfBirth = 'DOB';
+  static const String date = 'DATE';
+  static const String yesRegister = 'YES, REGISTER';
+  static const String successful = 'SUCCESSFUL';
 
 }

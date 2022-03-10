@@ -955,8 +955,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
           } else {
             setState(() {
               // isPINCorrect = false;
-              Timer(const Duration(milliseconds: 1000),
-                  () => _incorrectPINDialog());
+              Timer(const Duration(milliseconds: 1000), () => _incorrectPINDialog());
             });
           }
         },
