@@ -79,7 +79,7 @@ class English {
   static const String vibration = 'VIBRATION';
   static const String temperature = 'TEMPERATURE';
   static const String imeiNumber = 'IMEI NUMBER';
-  static const String icciNumber = 'ICCDI NUMBER';
+  static const String iccidNumber = 'ICCDI NUMBER';
   static const String phone = 'PHONE NUMBER';
   static const String dateAdded = 'DATE ADDED';
   static const String receiverEmail = 'Receiver Email';
@@ -96,4 +96,13 @@ class English {
   static const String confirm = 'CONFIRM';
   static const String confirmActionText = 'Please enter your password to confirm this action!';
   static const String areYouSure = 'Are you sure?';
+
+  // SMS Activity
+  static const String smsActivityText = 'Manage SIM Cards';
+  static const String registeredSims = 'REGISTERED SIMS';
+  static const String addNewSIMS = 'ADD NEW SIM';
+  static const String totalSimCard = 'TOTAL SIM CARDS';
+  static const String connectedToDevice = 'Connected To Device';
+  static const String availableForConnection = 'Available For Connection';
+
 }

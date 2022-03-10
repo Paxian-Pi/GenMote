@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 class Constant {
   // Constant._();
 
-  static String cardThemePref = "themeColor";
+  static String appDomain = 'www.gentro.io';
   static bool englishLang = true;
   static bool pidginEnglishLang = false;
   static bool isConnectedToWIFI = false;
   static bool isConnectedToMobile = false;
   static bool hideOrShowPassword = true;
+  static bool isOnline = false;
 
 
   // App font sizes

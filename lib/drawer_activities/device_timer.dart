@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,7 @@ import 'package:genmote/methods.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:intl/intl.dart';
+import 'package:universal_internet_checker/universal_internet_checker.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
@@ -22,7 +24,8 @@ class DeviceTimer extends StatefulWidget {
   _DeviceTimerState createState() => _DeviceTimerState();
 }
 
-class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin {
+class _DeviceTimerState extends State<DeviceTimer>
+    with TickerProviderStateMixin {
   late String timerText;
   late String setTimer;
   late String startTime;
@@ -76,6 +79,7 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
   String currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
   String shutDownTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+
   // String shutDownTime = '00:00';
 
   late String min;
@@ -95,38 +99,62 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
   double progress = 1.0;
 
   void _notify() {
-    if(countText == '00:00:00') {
+    if (countText == '00:00:00') {
       // FlutterRingtonePlayer.playNotification();
       FlutterRingtonePlayer.play(
         android: AndroidSounds.ringtone,
         ios: IosSounds.glass,
-        looping: false, // Android only - API >= 28
-        volume: 0.2, // Android only - API >= 28
+        looping: false,
+        // Android only - API >= 28
+        volume: 0.2,
+        // Android only - API >= 28
         asAlarm: false, // Android only - all APIs
       );
       HapticFeedback.vibrate();
     }
   }
 
+  bool _isConnected = false;
+  Future<void> _checkInternetConnection() async {
+    try {
+      final response = await InternetAddress.lookup(Constant.appDomain);
+
+      if(response.isNotEmpty) {
+        setState(() {
+          _isConnected = true;
+        });
+
+      }
+    }
+    on SocketException catch (err) {
+      setState(() {
+        _isConnected = false;
+      });
+
+      if (kDebugMode) {
+        print('Error: $err');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _checkInternetConnection();
     _lang();
 
-    Methods.wifiConnectivityState();
+    // Methods.wifiConnectivityState();
 
     controller = AnimationController(vsync: this, duration: const Duration(seconds: 0));
 
     controller.addListener(() {
-
       _notify();
 
       if (controller.isAnimating) {
         setState(() {
           progress = controller.value;
         });
-      }
-      else {
+      } else {
         setState(() {
           progress = 1.0;
           isPlaying = false;
@@ -145,6 +173,7 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    _checkInternetConnection();
 
     return WillPopScope(
       onWillPop: () async {
@@ -214,17 +243,17 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
               ),
             ),
           ),
-          Constant.isConnectedToWIFI
+          _isConnected
               ? const Icon(
-            Icons.wifi,
-            color: Colors.white,
-            size: Constant.iconSize,
-          )
+                  Icons.wifi,
+                  color: Colors.white,
+                  size: Constant.iconSize,
+                )
               : const Icon(
-            Icons.wifi_off_outlined,
-            color: Colors.white,
-            size: Constant.iconSize,
-          ),
+                  Icons.wifi_off_outlined,
+                  color: Colors.white,
+                  size: Constant.iconSize,
+                ),
         ],
       ),
     );
@@ -421,8 +450,12 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
           margin: const EdgeInsets.only(left: 15),
           child: Column(
             children: [
-              Text(currentStartTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
-              Text(startTime, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
+              Text(currentStartTime,
+                  style:
+                      const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(startTime,
+                  style:
+                      const TextStyle(color: Constant.mainColor, fontSize: 16)),
             ],
           ),
         ),
@@ -430,8 +463,12 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
           margin: const EdgeInsets.only(right: 15),
           child: Column(
             children: [
-              Text(shutDownTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
-              Text(stopTime, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
+              Text(shutDownTime,
+                  style:
+                      const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(stopTime,
+                  style:
+                      const TextStyle(color: Constant.mainColor, fontSize: 16)),
             ],
           ),
         ),
@@ -515,7 +552,6 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
         ),
         GestureDetector(
           onTap: () {
-
             HapticFeedback.vibrate();
             SystemSound.play(SystemSoundType.click);
 
@@ -523,8 +559,8 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
 
             Timer(const Duration(seconds: 1), () {
               setState(() {
-                if(!Constant.isConnectedToWIFI) {
-                  Methods.showToast('Not connected to WIFI...', ToastGravity.CENTER);
+                if (!Constant.isOnline) {
+                  Methods.showToast('No internet connection...', ToastGravity.CENTER);
                   return;
                 }
 
@@ -538,31 +574,34 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
                   });
                 });
 
-
-
                 if (controller.isAnimating) {
                   controller.stop();
                   setState(() {
                     isPlaying = false;
                   });
-                }
-                else {
-                  controller.reverse(from: controller.value == 0
-                      ? 1.0
-                      : controller.value,
+                } else {
+                  controller.reverse(
+                    from: controller.value == 0 ? 1.0 : controller.value,
                   );
 
                   setState(() {
                     isPlaying = true;
-                    currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+                    currentStartTime =
+                        '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
-                    DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
-                    DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
-                    String formattedHour = DateFormat('HH').format(durationHour);
-                    String formattedMinutes = DateFormat('mm').format(durationMinutes);
+                    DateTime durationHour =
+                        now.add(Duration(hours: controller.duration!.inHours));
+                    DateTime durationMinutes = now
+                        .add(Duration(minutes: controller.duration!.inMinutes));
+                    String formattedHour =
+                        DateFormat('HH').format(durationHour);
+                    String formattedMinutes =
+                        DateFormat('mm').format(durationMinutes);
 
-                    int currentHour = int.parse(DateTime.now().hour.toString().padLeft(2, '0'));
-                    int currentMinutes = int.parse(DateTime.now().minute.toString().padLeft(2, '0'));
+                    int currentHour = int.parse(
+                        DateTime.now().hour.toString().padLeft(2, '0'));
+                    int currentMinutes = int.parse(
+                        DateTime.now().minute.toString().padLeft(2, '0'));
                     int countMinutes = int.parse(countText.substring(3, 5));
                     int countHour = int.parse(countText.substring(0, 2));
 
@@ -575,20 +614,23 @@ class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin
                     min = '${currentMinutes + countMinutes}';
                     hour = '${currentHour + countHour}';
 
-                    if(int.parse(hour) < 23 &&  int.parse(min) > 59) {
+                    if (int.parse(hour) < 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = int.parse(hour) + 1;
-                      shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      shutDownTime =
+                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                     }
 
-                    if(int.parse(hour) >= 23 && int.parse(min) > 59) {
+                    if (int.parse(hour) >= 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = 0;
-                      shutDownTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      shutDownTime =
+                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                     }
 
-                    if(int.parse(hour) < 24 && int.parse(min) < 60) {
-                      shutDownTime = '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
+                    if (int.parse(hour) < 24 && int.parse(min) < 60) {
+                      shutDownTime =
+                          '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
                     }
                   });
                 }

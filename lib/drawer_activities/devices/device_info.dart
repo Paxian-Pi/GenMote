@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:animated_widgets/widgets/opacity_animated.dart';
 import 'package:animated_widgets/widgets/rotation_animated.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pinput/pinput.dart';
+import 'package:universal_internet_checker/universal_internet_checker.dart';
 
 import '../../app_languages/english.dart';
 import '../../app_languages/pidginEnglish.dart';
@@ -76,7 +78,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
       vibration = English.vibration;
       temperature = English.temperature;
       imeiNumber = English.imeiNumber;
-      icciNumber = English.icciNumber;
+      icciNumber = English.iccidNumber;
       phoneNumber = English.phone;
       dateAdded = English.dateAdded;
       receiverEmail = English.receiverEmail;
@@ -112,7 +114,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
       vibration = PidginEnglish.vibration;
       temperature = PidginEnglish.temperature;
       imeiNumber = PidginEnglish.imeiNumber;
-      icciNumber = PidginEnglish.icciNumber;
+      icciNumber = PidginEnglish.iccidNumber;
       phoneNumber = PidginEnglish.phone;
       dateAdded = PidginEnglish.dateAdded;
       receiverEmail = PidginEnglish.receiverEmail;
@@ -152,8 +154,9 @@ class _DeviceInfoState extends State<DeviceInfo> {
   @override
   void initState() {
     super.initState();
+    _checkInternetConnection();
     _lang();
-    Methods.wifiConnectivityState();
+    // Methods.wifiConnectivityState();
     _focusNode = FocusNode();
   }
 
@@ -165,8 +168,33 @@ class _DeviceInfoState extends State<DeviceInfo> {
     super.dispose();
   }
 
+  bool _isConnected = false;
+  Future<void> _checkInternetConnection() async {
+    try {
+      final response = await InternetAddress.lookup(Constant.appDomain);
+
+      if(response.isNotEmpty) {
+        setState(() {
+          _isConnected = true;
+        });
+
+      }
+    }
+    on SocketException catch (err) {
+      setState(() {
+        _isConnected = false;
+      });
+
+      if (kDebugMode) {
+        print('Error: $err');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _checkInternetConnection();
+
     return WillPopScope(
       onWillPop: () async {
         // Phone's back button is inactive!
@@ -229,7 +257,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
               ),
             ),
           ),
-          Constant.isConnectedToWIFI
+          _isConnected
               ? const Icon(
                   Icons.wifi,
                   color: Colors.white,
@@ -795,6 +823,12 @@ class _DeviceInfoState extends State<DeviceInfo> {
             HapticFeedback.vibrate();
             SystemSound.play(SystemSoundType.click);
 
+            _checkInternetConnection();
+            if(!_isConnected) {
+              Methods.showToast('No internet!', ToastGravity.CENTER);
+              return;
+            }
+
             setState(() {
               isSecurityPassWidget = true;
             });
@@ -846,9 +880,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
         _requestCodeAgain(),
         const SizedBox(height: 50),
         Container(
-          child: isAccessGranted
-              ? _circularSpinner()
-              : _securityPassSendButton(),
+          child:
+              isAccessGranted ? _circularSpinner() : _securityPassSendButton(),
         ),
       ],
     );
@@ -897,6 +930,13 @@ class _DeviceInfoState extends State<DeviceInfo> {
         focusNode: _focusNode,
         onCompleted: (pin) {
           if (pin == '1706') {
+
+            _checkInternetConnection();
+            if(!_isConnected) {
+              Methods.showToast('No internet!', ToastGravity.CENTER);
+              return;
+            }
+
             Timer(const Duration(milliseconds: 500), () {
               setState(() {
                 // isPINCorrect = true;
@@ -915,7 +955,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
           } else {
             setState(() {
               // isPINCorrect = false;
-              Timer(const Duration(milliseconds: 1000), () => _incorrectPINDialog());
+              Timer(const Duration(milliseconds: 1000),
+                  () => _incorrectPINDialog());
             });
           }
         },
@@ -932,7 +973,10 @@ class _DeviceInfoState extends State<DeviceInfo> {
           style: const TextStyle(color: Colors.grey, fontSize: 16.0),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            HapticFeedback.vibrate();
+            SystemSound.play(SystemSoundType.click);
+          },
           child: Text(
             sendAgain,
             style: const TextStyle(color: Constant.accent, fontSize: 16.0),
@@ -947,6 +991,11 @@ class _DeviceInfoState extends State<DeviceInfo> {
       onTap: () {
         HapticFeedback.vibrate();
         SystemSound.play(SystemSoundType.click);
+
+        if(!_isConnected) {
+          Methods.showToast('No internet!', ToastGravity.CENTER);
+          return;
+        }
 
         Methods.showToast('Enter the correct PIN to continue!', ToastGravity.CENTER);
 
@@ -1311,7 +1360,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                       SystemSound.play(SystemSoundType.click);
 
                       Navigator.pop(context);
-                      Timer(const Duration(milliseconds: 500), () => _focusNode.requestFocus());
+                      Timer(const Duration(milliseconds: 500),
+                          () => _focusNode.requestFocus());
                     },
                     child: Center(
                       child: Container(
@@ -1323,7 +1373,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                             width: 1,
                           ),
                           color: Colors.red,
-                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -1420,8 +1471,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                 children: [
                   const SizedBox(height: 20),
                   Container(
-                    margin:
-                    const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                    margin: const EdgeInsets.only(
+                        top: 10, left: 20, right: 20, bottom: 20),
                     width: 100,
                     height: 100,
                     decoration: const BoxDecoration(
@@ -1431,7 +1482,11 @@ class _DeviceInfoState extends State<DeviceInfo> {
                       ),
                     ),
                   ),
-                  Text(areYouSure, style: const TextStyle(color: Colors.grey, fontSize: 18, decoration: TextDecoration.none)),
+                  Text(areYouSure,
+                      style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 18,
+                          decoration: TextDecoration.none)),
                   const SizedBox(height: 70),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1456,7 +1511,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                                 width: 1,
                               ),
                               color: Colors.red,
-                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5)),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1491,7 +1547,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                                 width: 1,
                               ),
                               color: Colors.white,
-                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5)),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1602,15 +1659,12 @@ class _DeviceInfoState extends State<DeviceInfo> {
       //   ],
       // ),
 
-
-
       builder: (context) => ScaleAnimatedWidget.tween(
         enabled: true,
         duration: const Duration(milliseconds: 300),
         scaleDisabled: 0.5,
         scaleEnabled: 1,
-        child:
-        Container(
+        child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 230),
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -1627,7 +1681,11 @@ class _DeviceInfoState extends State<DeviceInfo> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                Text(confirmActionText, style: const TextStyle(color: Colors.grey, fontSize: 18, decoration: TextDecoration.none)),
+                Text(confirmActionText,
+                    style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        decoration: TextDecoration.none)),
                 const SizedBox(height: 50),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.center,
@@ -1675,7 +1733,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                       //   ),
                       // ),
                       label: Text(password),
-                      border: const OutlineInputBorder(borderSide: BorderSide()),
+                      border:
+                          const OutlineInputBorder(borderSide: BorderSide()),
                     ),
                   ),
                 ),
@@ -1700,7 +1759,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                               width: 1,
                             ),
                             color: Colors.white,
-                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -1738,7 +1798,8 @@ class _DeviceInfoState extends State<DeviceInfo> {
                               width: 1,
                             ),
                             color: Colors.red,
-                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,

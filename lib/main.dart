@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:genmote/constants.dart';
 import 'package:genmote/generated/assets.dart';
+import 'package:genmote/methods.dart';
+import 'package:genmote/network_status.dart';
 import 'package:genmote/on-boarding/onboarding.dart';
+import 'package:genmote/services/service_provider.dart';
 
 
 void main() {
@@ -14,13 +17,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'GenMote',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return ServiceProvider(
+      methods: Methods(),
+      child: MaterialApp(
+        title: 'GenMote',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: _splash(),
       ),
-      home: _splash(),
     );
   }
 }

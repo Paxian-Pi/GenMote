@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/app_languages/pidginEnglish.dart';
 import 'package:genmote/authentication/signup.dart';
@@ -17,13 +18,20 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final formKey = GlobalKey<FormState>();
   bool _rememberMe = false;
 
-  late String welcomeText, loginText, email, password, rememberMe, forgotPassword, signupText, noAccount;
+  late String welcomeText,
+      loginText,
+      email,
+      password,
+      rememberMe,
+      forgotPassword,
+      signupText,
+      noAccount;
+
   void _lang() {
-    if(Constant.englishLang) {
+    if (Constant.englishLang) {
       welcomeText = English.welcomeBackText;
       loginText = English.loginText;
       email = English.email;
@@ -34,7 +42,7 @@ class _LoginState extends State<Login> {
       noAccount = English.noAccount;
     }
 
-    if(Constant.pidginEnglishLang) {
+    if (Constant.pidginEnglishLang) {
       welcomeText = PidginEnglish.welcomeText;
       loginText = PidginEnglish.loginText;
       email = PidginEnglish.email;
@@ -561,6 +569,8 @@ class _LoginState extends State<Login> {
           // ),
           child: TextButton(
             onPressed: () {
+              HapticFeedback.vibrate();
+              SystemSound.play(SystemSoundType.click);
               Navigator.of(context).push(
                 PageTransition(
                   child: const Signup(),

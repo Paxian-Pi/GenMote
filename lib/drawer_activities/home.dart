@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,13 +18,17 @@ import 'package:genmote/drawer_activities/device_timer.dart';
 import 'package:genmote/home_page_text/text1.dart';
 import 'package:genmote/home_page_text/text3.dart';
 import 'package:genmote/methods.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:network_connectivity/network_connectivity.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:universal_internet_checker/universal_internet_checker.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
 import '../home_page_text/text2.dart';
+import '../services/service_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -128,11 +134,58 @@ class _HomeState extends State<Home> {
     }
   }
 
+  StreamSubscription? subscription;
+  ConnectionStatus? _status;
+  final UniversalInternetChecker _internetChecker = UniversalInternetChecker();
+  bool _isOnline = false;
+
+  String _message = '';
+
   @override
   void initState() {
     super.initState();
+
     _lang();
-    Methods.wifiConnectivityState();
+
+    _checkInternetConnection();
+  }
+
+  void _networkConnectivity() {
+    subscription = _internetChecker.onConnectionChange.listen((status) {
+      setState(() {
+        _status = status;
+      });
+    });
+  }
+
+  @override
+  dispose() {
+    subscription?.cancel();
+    super.dispose();
+  }
+
+  bool _isConnected = false;
+
+  Future<void> _checkInternetConnection() async {
+    try {
+      final response = await InternetAddress.lookup(Constant.appDomain);
+
+      if(response.isNotEmpty) {
+        setState(() {
+          _isConnected = true;
+        });
+
+      }
+    }
+    on SocketException catch (err) {
+      setState(() {
+        _isConnected = false;
+      });
+
+      if (kDebugMode) {
+        print('Error: $err');
+      }
+    }
   }
 
   bool _isPowerButtonClicked = false;
@@ -165,6 +218,19 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    _checkInternetConnection();
+
+    var _service = ServiceProvider.of(context).methods;
+
+    _message = _status == ConnectionStatus.online ? 'Connected' : 'Not Connected';
+    _status == ConnectionStatus.online ? _isOnline = true : _isOnline = false;
+    Constant.isOnline = _isOnline;
+
+    // if (kDebugMode) {
+    //   print('Connected: $_isOnline');
+    //   print('Status: $_message');
+    // }
 
     return Scaffold(
       key: scaffoldKey,
@@ -362,7 +428,6 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             _appBar(),
-
             SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
@@ -489,7 +554,7 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          Constant.isConnectedToWIFI
+          _isConnected
               ? const Icon(
                   Icons.wifi,
                   color: Colors.white,
@@ -673,8 +738,8 @@ class _HomeState extends State<Home> {
                     );
                   });
                 },
-                title: Text("SMS", style: textStyle),
-                leading: Icon(Icons.sms, color: iconColor),
+                title: Text("SIMS", style: textStyle),
+                leading: Icon(Icons.sim_card_outlined, color: iconColor),
               ),
               ListTile(
                 onTap: () {
@@ -782,10 +847,11 @@ class _HomeState extends State<Home> {
 
                       Methods.wifiConnectivityState();
 
-                      Timer(const Duration(seconds: 1), () {
+                      Timer(const Duration(milliseconds: 500), () {
                         setState(() {
-                          if(!Constant.isConnectedToWIFI) {
-                            Methods.showToast('Not connected to WIFI...', ToastGravity.TOP);
+                          if (!_isConnected) {
+                            Methods.showToast(
+                                'No internet connection =>', ToastGravity.TOP);
                             return;
                           }
 
@@ -796,7 +862,8 @@ class _HomeState extends State<Home> {
                           Timer(const Duration(seconds: 2), () {
                             setState(() {
                               _isPowerButtonClicked = false;
-                              Methods.showToast('API required...', ToastGravity.TOP);
+                              Methods.showToast(
+                                  'API required...', ToastGravity.TOP);
                             });
                           });
                         });

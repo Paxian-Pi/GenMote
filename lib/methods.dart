@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
@@ -23,6 +26,26 @@ class Methods {
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return scaffoldKey;
+  }
+
+  Future<void> checkInternetConnection() async {
+    bool? _isConnected;
+
+    try {
+      final response = await InternetAddress.lookup('www.google.com');
+
+      if(response.isNotEmpty) {
+        _isConnected = true;
+
+      }
+    }
+    on SocketException catch (err) {
+      _isConnected = false;
+
+      if (kDebugMode) {
+        print('Error: $err');
+      }
+    }
   }
 
   static void wifiConnectivityState() async {

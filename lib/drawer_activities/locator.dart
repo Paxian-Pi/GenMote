@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:universal_internet_checker/universal_internet_checker.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
@@ -28,14 +31,45 @@ class _LocatorState extends State<Locator> {
     }
   }
 
+  bool _isConnected = false;
+  Future<void> _checkInternetConnection() async {
+    try {
+      final response = await InternetAddress.lookup(Constant.appDomain);
+
+      if(response.isNotEmpty) {
+        setState(() {
+          _isConnected = true;
+        });
+
+      }
+    }
+    on SocketException catch (err) {
+      setState(() {
+        _isConnected = false;
+      });
+
+      if (kDebugMode) {
+        print('Error: $err');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _checkInternetConnection();
     _lang();
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _checkInternetConnection();
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
@@ -98,11 +132,17 @@ class _LocatorState extends State<Locator> {
               ),
             ),
           ),
-          const Icon(
-            Icons.wifi_off_outlined, // TODO: Switch to wifi_on mode with API
-            color: Colors.white,
-            size: Constant.iconSize,
-          ),
+          _isConnected
+              ? const Icon(
+                  Icons.wifi,
+                  color: Colors.white,
+                  size: Constant.iconSize,
+                )
+              : const Icon(
+                  Icons.wifi_off_outlined,
+                  color: Colors.white,
+                  size: Constant.iconSize,
+                ),
         ],
       ),
     );
