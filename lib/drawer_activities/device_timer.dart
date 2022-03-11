@@ -28,8 +28,8 @@ class _DeviceTimerState extends State<DeviceTimer>
     with TickerProviderStateMixin {
   late String timerText;
   late String setTimer;
-  late String startTime;
-  late String stopTime;
+  late String currentStartTimeText;
+  late String stopTimeText;
   late String reset;
   late String start;
   late String pause;
@@ -39,8 +39,8 @@ class _DeviceTimerState extends State<DeviceTimer>
     if (Constant.englishLang) {
       timerText = English.timerText;
       setTimer = English.setTime;
-      startTime = English.startTime;
-      stopTime = English.stopTime;
+      currentStartTimeText = English.startTime;
+      stopTimeText = English.stopTime;
       reset = English.reset;
       start = English.start;
       pause = English.pause;
@@ -50,8 +50,8 @@ class _DeviceTimerState extends State<DeviceTimer>
     if (Constant.pidginEnglishLang) {
       timerText = PidginEnglish.timerText;
       setTimer = PidginEnglish.setTime;
-      startTime = PidginEnglish.startTime;
-      stopTime = PidginEnglish.stopTime;
+      currentStartTimeText = PidginEnglish.startTime;
+      stopTimeText = PidginEnglish.stopTime;
       reset = PidginEnglish.reset;
       start = PidginEnglish.start;
       pause = PidginEnglish.pause;
@@ -78,7 +78,7 @@ class _DeviceTimerState extends State<DeviceTimer>
 
   String currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
-  String shutDownTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+  String stopTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
   // String shutDownTime = '00:00';
 
@@ -358,49 +358,66 @@ class _DeviceTimerState extends State<DeviceTimer>
         HapticFeedback.vibrate();
         SystemSound.play(SystemSoundType.click);
 
-        if (controller.isDismissed) {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) => SizedBox(
-              height: 250,
-              child: CupertinoTimerPicker(
-                initialTimerDuration: controller.duration!,
-                onTimerDurationChanged: (time) {
-                  setState(() {
-                    controller.duration = time;
-                  });
-                },
-              ),
-            ),
+        if (!controller.isDismissed) {
+          Methods.showToast('Timer currently running!', ToastGravity.BOTTOM);
+        }
+        else {
+          // showModalBottomSheet(
+          //   context: context,
+          //   builder: (context) => SizedBox(
+          //     height: 250,
+          //     child: CupertinoTimerPicker(
+          //       initialTimerDuration: controller.duration!,
+          //       onTimerDurationChanged: (time) {
+          //         setState(() {
+          //           controller.duration = time;
+          //         });
+          //       },
+          //     ),
+          //   ),
+          // );`
+
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: CupertinoAlertDialog(
+                  title: const Text('Set Timer'),
+                  content: SizedBox(
+                    height: 250,
+                    child: CupertinoTimerPicker(
+                      mode: CupertinoTimerPickerMode.hm,
+                      initialTimerDuration: controller.duration!,
+                      onTimerDurationChanged: (time) {
+                        setState(() {
+                          controller.duration = time;
+                        });
+                      },
+                    ),
+                  ),
+                  actions: [
+                    CupertinoDialogAction(
+                      child: const Text('DONE'),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ),
+                // child: SimpleDialog(
+                //   elevation: 5,
+                //   title: const Text('Set Timer'),
+                //   children: [
+                //     CupertinoTimerPicker(
+                //       initialTimerDuration: controller.duration!,
+                //       onTimerDurationChanged: (time) {
+                //         setState(() {
+                //           controller.duration = time;
+                //         });
+                //       },
+                //     ),
+                //   ],
+                // ),
+              )
           );
-
-          // showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) => SizedBox(
-          //       width: MediaQuery.of(context).size.width * 0.7,
-          //       child: CupertinoAlertDialog(
-          //         title: const Text('Set Timer'),
-          //         content: SizedBox(
-          //           height: 250,
-          //           child: CupertinoTimerPicker(
-          //             initialTimerDuration: controller.duration!,
-          //             onTimerDurationChanged: (time) {
-          //               setState(() {
-          //                 controller.duration = time;
-          //               });
-          //             },
-          //           ),
-          //         ),
-          //         actions: [
-          //           CupertinoDialogAction(
-          //             child: const Text('DONE'),
-          //             onPressed: () => Navigator.of(context).pop(),
-          //           )
-          //         ],
-          //       ),
-          //     )
-          // );
-
         }
       },
       child: Container(
@@ -450,12 +467,8 @@ class _DeviceTimerState extends State<DeviceTimer>
           margin: const EdgeInsets.only(left: 15),
           child: Column(
             children: [
-              Text(currentStartTime,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 30)),
-              Text(startTime,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 16)),
+              Text(currentStartTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(currentStartTimeText, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
             ],
           ),
         ),
@@ -463,12 +476,8 @@ class _DeviceTimerState extends State<DeviceTimer>
           margin: const EdgeInsets.only(right: 15),
           child: Column(
             children: [
-              Text(shutDownTime,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 30)),
-              Text(stopTime,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 16)),
+              Text(stopTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(stopTimeText, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
             ],
           ),
         ),
@@ -559,7 +568,7 @@ class _DeviceTimerState extends State<DeviceTimer>
 
             Timer(const Duration(seconds: 1), () {
               setState(() {
-                if (!Constant.isOnline) {
+                if (!_isConnected) {
                   Methods.showToast('No internet connection...', ToastGravity.CENTER);
                   return;
                 }
@@ -586,22 +595,15 @@ class _DeviceTimerState extends State<DeviceTimer>
 
                   setState(() {
                     isPlaying = true;
-                    currentStartTime =
-                        '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+                    currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
-                    DateTime durationHour =
-                        now.add(Duration(hours: controller.duration!.inHours));
-                    DateTime durationMinutes = now
-                        .add(Duration(minutes: controller.duration!.inMinutes));
-                    String formattedHour =
-                        DateFormat('HH').format(durationHour);
-                    String formattedMinutes =
-                        DateFormat('mm').format(durationMinutes);
+                    DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
+                    DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
+                    String formattedHour = DateFormat('HH').format(durationHour);
+                    String formattedMinutes = DateFormat('mm').format(durationMinutes);
 
-                    int currentHour = int.parse(
-                        DateTime.now().hour.toString().padLeft(2, '0'));
-                    int currentMinutes = int.parse(
-                        DateTime.now().minute.toString().padLeft(2, '0'));
+                    int currentHour = int.parse(DateTime.now().hour.toString().padLeft(2, '0'));
+                    int currentMinutes = int.parse(DateTime.now().minute.toString().padLeft(2, '0'));
                     int countMinutes = int.parse(countText.substring(3, 5));
                     int countHour = int.parse(countText.substring(0, 2));
 
@@ -617,20 +619,17 @@ class _DeviceTimerState extends State<DeviceTimer>
                     if (int.parse(hour) < 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = int.parse(hour) + 1;
-                      shutDownTime =
-                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                     }
 
                     if (int.parse(hour) >= 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = 0;
-                      shutDownTime =
-                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                     }
 
                     if (int.parse(hour) < 24 && int.parse(min) < 60) {
-                      shutDownTime =
-                          '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
+                      stopTime = '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
                     }
                   });
                 }

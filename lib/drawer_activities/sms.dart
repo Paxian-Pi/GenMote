@@ -250,7 +250,13 @@ class _SmsState extends State<Sms> {
                 const SizedBox(height: 30),
                 _switchButtons(),
                 _simActivities(),
-                Container(child: isAddNewSim ? Container(child: !isCheckDetails ? _processButtons() : null,) : null,),
+                Container(
+                  child: isAddNewSim
+                      ? Container(
+                          child: !isCheckDetails ? _processButtons() : null,
+                        )
+                      : null,
+                ),
                 const SizedBox(height: 30),
               ],
             ),
@@ -362,7 +368,11 @@ class _SmsState extends State<Sms> {
           ? _registeredSIMS()
           : Container(
               child: isCheckDetails
-                  ? Container(child: isRegistered ? _successfulWidgets() :_checkDetailsContainer())
+                  ? Container(
+                      child: isRegistered
+                          ? _successfulWidgets()
+                          : _checkDetailsContainer(),
+                    )
                   : _addNewSIM(),
             ),
     );
@@ -1033,7 +1043,7 @@ class _SmsState extends State<Sms> {
             ),
           ],
         ),
-       const SizedBox(height: 5),
+        const SizedBox(height: 5),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1260,6 +1270,7 @@ class _SmsState extends State<Sms> {
                 isRegisteredSim = true;
                 isAddNewSim = false;
                 isRegistered = false;
+                isCheckDetails = false;
               });
             });
           });
