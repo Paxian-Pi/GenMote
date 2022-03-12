@@ -13,7 +13,7 @@ import 'package:genmote/drawer_activities/locator.dart';
 import 'package:genmote/drawer_activities/parameter.dart';
 import 'package:genmote/drawer_activities/profile.dart';
 import 'package:genmote/drawer_activities/settings.dart';
-import 'package:genmote/drawer_activities/sms.dart';
+import 'package:genmote/drawer_activities/sims.dart';
 import 'package:genmote/drawer_activities/device_timer.dart';
 import 'package:genmote/home_page_text/text1.dart';
 import 'package:genmote/home_page_text/text3.dart';
@@ -887,16 +887,8 @@ class _HomeState extends State<Home> {
                           width: size.width,
                           height: size.height,
                           child: _isPowerButtonClicked
-                              ? const CircleAvatar(
-                                  // TODO: Switch images using ternary operator
-                                  backgroundImage:
-                                      AssetImage('assets/on_no_network.png'),
-                                )
-                              : const CircleAvatar(
-                                  // TODO: Switch images using ternary operator
-                                  backgroundImage:
-                                      AssetImage('assets/off_no_network.png'),
-                                ),
+                              ? const CircleAvatar(backgroundImage: AssetImage('assets/on_no_network.png'))
+                              : const CircleAvatar(backgroundImage: AssetImage('assets/off_no_network.png')),
                         )),
                       ],
                     ),

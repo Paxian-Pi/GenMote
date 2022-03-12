@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:animated_radio_buttons/animated_radio_buttons.dart';
 import 'package:animated_widgets/widgets/scale_animated.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -664,12 +662,9 @@ class _SmsState extends State<Sms> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     const Icon(Icons.sim_card, color: Constant.accent),
-                    const Text('2748',
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    const Text('Office Generator',
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
-                    const Text('1gb',
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    const Text('2748', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    const Text('Office Generator', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    const Text('1gb', style: TextStyle(color: Colors.grey, fontSize: 14)),
                     GestureDetector(
                       onTap: () {
                         HapticFeedback.vibrate();
@@ -825,7 +820,7 @@ class _SmsState extends State<Sms> {
         ),
         ListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text('NO'),
+          title: const Text('NO'),
           leading: Radio<String>(
             value: 'NO',
             groupValue: _isSIMRegistered,
@@ -970,6 +965,7 @@ class _SmsState extends State<Sms> {
             if (value!.isEmpty) {
               return "Please enter your NIN number!";
             }
+            return null;
           },
         ),
       ],

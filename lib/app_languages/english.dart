@@ -112,12 +112,23 @@ class English {
   static const String addYourNationalIDNumber = 'Add your National Identity Number';
   static const String submit = 'SUBMIT';
   static const String confirmYourDetails = 'Please confirm your details!';
-  static const String continueRegistration = 'Click "Yes" to continue registration with these details!';
+  static const String continueRegistration = 'Click "Yes" to continue registration if you are sure!';
   static const String username = 'NAME';
   static const String address = 'ADDRESS';
   static const String dateOfBirth = 'DOB';
   static const String date = 'DATE';
   static const String yesRegister = 'YES, REGISTER';
   static const String successful = 'SUCCESSFUL';
+
+  // Profile
+  static const String profileActivityText = 'User Profile';
+  static const String contacts = 'Contacts';
+  static const String save = 'SAVE';
+  static const String edit = 'EDIT';
+  static const String location = 'Location';
+  static const String numberOfDevices = 'Number of devices';
+  static const String numberOfSimCards = 'Number of SIM cards';
+  static const String grantedAccess = 'Granted Access';
+  static const String changeHasBeenSaved = 'Changes has been saved!';
 
 }
