@@ -76,10 +76,10 @@ class _ProfileState extends State<Profile> {
     _lang();
   }
 
-  bool _isConnected = false;
   bool _isEditButtonClicked = false;
   bool _isShowSpinner = false;
   bool _isChangeSaved = false;
+  bool _isConnected = false;
 
   Future<void> _checkInternetConnection() async {
     try {
@@ -716,11 +716,11 @@ class _ProfileState extends State<Profile> {
           children: [
             Text(
               numberOfDevices,
-              style: TextStyle(color: Colors.grey[200], fontSize: 16),
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
             Text(
               '3 connected',
-              style: TextStyle(color: Colors.grey[200], fontSize: 16),
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
           ],
         ),
@@ -730,11 +730,11 @@ class _ProfileState extends State<Profile> {
           children: [
             Text(
               numberOfSimCards,
-              style: TextStyle(color: Colors.grey[200], fontSize: 16),
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
             Text(
               '4 SIM cards',
-              style: TextStyle(color: Colors.grey[200], fontSize: 16),
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
           ],
         ),
@@ -744,11 +744,11 @@ class _ProfileState extends State<Profile> {
           children: [
             Text(
               grantedAccess,
-              style: TextStyle(color: Colors.grey[200], fontSize: 16),
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
             Text(
               '1 Person',
-              style: TextStyle(color: Colors.grey[200], fontSize: 16),
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
           ],
         ),
@@ -1100,7 +1100,7 @@ class _ProfileState extends State<Profile> {
               return;
             }
 
-            // TODO: Send email, phone number & location to database with a POST request, on click!
+            // TODO: Send email, phone number & location to database with a POST request, on click here!
             Navigator.of(context).pop();
           },
           child: Container(

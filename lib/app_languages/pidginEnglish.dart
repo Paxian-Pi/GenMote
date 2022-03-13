@@ -130,4 +130,7 @@ class PidginEnglish {
   static const String numberOfSimCards = 'Number of SIM cards';
   static const String grantedAccess = 'Granted Access';
   static const String changeHasBeenSaved = 'All change don save!';
+
+  // Settings
+  static const String settingsActivityText = 'Settings';
 }

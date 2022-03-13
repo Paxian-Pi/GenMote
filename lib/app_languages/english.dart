@@ -131,4 +131,7 @@ class English {
   static const String grantedAccess = 'Granted Access';
   static const String changeHasBeenSaved = 'Changes has been saved!';
 
+  // Settings
+  static const String settingsActivityText = 'Settings';
+
 }
