@@ -85,6 +85,8 @@ class PidginEnglish {
   static const String receiverEmail = 'Receiver Email';
   static const String send = 'SEND';
   static const String cancel = 'CANCEL';
+  static const String logout = 'LOGOUT';
+  static const String sureToLogout = 'You sure say you wan logout?';
   static const String securityPassTitle = 'Security Pass';
   static const String securityPassText = 'In order to be sure you made this request to grant 3rd party access to your device, please enter the code sent to your personal number, this is to ensure your device is secured.';
   static const String haveNotReceivedCode = 'Haven’t received a code?';
@@ -133,4 +135,18 @@ class PidginEnglish {
 
   // Settings
   static const String settingsActivityText = 'Settings';
+  static const String newPassword = 'New Password';
+  static const String seeYouSoon = 'No shakes, E go be nah!';
+
+  static const String deviceCustomAnalysis = 'Device Custom Analysis';
+  static const String generatorStartCycle = 'Generator Start Cycle';
+  static const String ignitionDuration = 'Ignition Duration';
+  static const String intervalBtwStart = 'Interval Between Start';
+  static const String stopDuratn = 'Stop Duration';
+  static const String vibrationDuration = 'Vibration Threshold';
+  static const String termsOfService = 'Terms of Services';
+  static const String language = 'Language';
+  static const String deviceUsers = 'Device Users';
+  static const String noInternet = 'No internet!';
+  static const String passwordReset = 'Password Reset';
 }

@@ -43,12 +43,12 @@ class _DevicesState extends State<Devices> {
   late String addGeneratorText;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       devicesText = English.devicesText;
       addGeneratorText = English.addGeneratorText;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       devicesText = PidginEnglish.devicesText;
       addGeneratorText = PidginEnglish.addGeneratorText;
     }

@@ -63,7 +63,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
   late String areYouSure;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       deviceInfoText = English.deviceInfoText;
       deviceInfoButton = English.deviceInfoButton;
       grantAccessButton = English.grantAccessButton;
@@ -99,7 +99,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
       areYouSure = English.areYouSure;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       deviceInfoText = PidginEnglish.deviceInfoText;
       deviceInfoButton = PidginEnglish.deviceInfoButton;
       grantAccessButton = PidginEnglish.grantAccessButton;
@@ -1470,8 +1470,7 @@ class _DeviceInfoState extends State<DeviceInfo> {
                 children: [
                   const SizedBox(height: 20),
                   Container(
-                    margin: const EdgeInsets.only(
-                        top: 10, left: 20, right: 20, bottom: 20),
+                    margin: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
                     width: 100,
                     height: 100,
                     decoration: const BoxDecoration(

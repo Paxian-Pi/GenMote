@@ -34,7 +34,7 @@ class _OnBoardingState extends State<OnBoarding> {
       skipButtonText;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       welcomeText = English.welcomeText;
       stayConnected = English.stayConnected;
       stayConnectedText = English.stayConnectedText;
@@ -48,7 +48,7 @@ class _OnBoardingState extends State<OnBoarding> {
       skipButtonText = English.skipButtonText;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       welcomeText = PidginEnglish.welcomeText;
       stayConnected = PidginEnglish.stayConnected;
       stayConnectedText = PidginEnglish.stayConnectedText;

@@ -4,8 +4,11 @@ class Constant {
   // Constant._();
 
   static String appDomain = 'www.gentro.io';
-  static bool englishLang = true;
-  static bool pidginEnglishLang = false;
+  static String englishLang = 'englishLang';
+  static String pidginEnglishLang = 'pidginEnglishLang';
+
+  static bool isEnglishLang = false;
+  static bool isPidginEnglishLang = false;
   static bool isConnectedToWIFI = false;
   static bool isConnectedToMobile = false;
   static bool hideOrShowPassword = true;

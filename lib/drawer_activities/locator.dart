@@ -22,11 +22,11 @@ class _LocatorState extends State<Locator> {
   late String locatorText;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       locatorText = English.locatorText;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       locatorText = PidginEnglish.locatorText;
     }
   }

@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
       noAccount;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       welcomeText = English.welcomeBackText;
       loginText = English.loginText;
       email = English.email;
@@ -42,7 +42,7 @@ class _LoginState extends State<Login> {
       noAccount = English.noAccount;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       welcomeText = PidginEnglish.welcomeText;
       loginText = PidginEnglish.loginText;
       email = PidginEnglish.email;

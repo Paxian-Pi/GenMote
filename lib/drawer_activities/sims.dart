@@ -45,7 +45,7 @@ class _SmsState extends State<Sms> {
   late String successful;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       smsActivityText = English.smsActivityText;
       registeredSims = English.registeredSims;
       addNewSIMS = English.addNewSIMS;
@@ -72,7 +72,7 @@ class _SmsState extends State<Sms> {
       successful = English.successful;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       smsActivityText = PidginEnglish.smsActivityText;
       registeredSims = PidginEnglish.registeredSims;
       addNewSIMS = PidginEnglish.addNewSIMS;

@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:animated_widgets/widgets/rotation_animated.dart';
+import 'package:animated_widgets/widgets/scale_animated.dart';
+import 'package:animated_widgets/widgets/shake_animated_widget.dart';
+import 'package:animated_widgets/widgets/translation_animated.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -118,19 +122,27 @@ class _HomeState extends State<Home> {
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late String textOne, textTwo, textThree;
+  late String textOne, textTwo, textThree, logout, cancel, sureToLogout, seeYouSoon;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       textOne = English.textOne;
       textTwo = English.textTwo;
       textThree = English.textThree;
+      logout = English.logout;
+      cancel = English.cancel;
+      sureToLogout = English.sureToLogout;
+      seeYouSoon = English.seeYouSoon;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       textOne = PidginEnglish.textOne;
       textTwo = PidginEnglish.textTwo;
       textThree = PidginEnglish.textThree;
+      logout = PidginEnglish.logout;
+      cancel = PidginEnglish.cancel;
+      sureToLogout = PidginEnglish.sureToLogout;
+      seeYouSoon = PidginEnglish.seeYouSoon;
     }
   }
 
@@ -188,6 +200,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  bool _isLoggedOut = false;
   bool _isPowerButtonClicked = false;
   bool _loading = true;
   double _vibrations = 0.0;
@@ -780,12 +793,12 @@ class _HomeState extends State<Home> {
               ListTile(
                 onTap: () {
                   Navigator.pop(context); // Dismiss drawer
-                  Timer(const Duration(milliseconds: 300), () {});
+                  Timer(const Duration(milliseconds: 300), () {
+                    _showLogoutDialog(context);
+                  });
                 },
-                title: const Text("LOGOUT",
-                    style: TextStyle(color: Color(0xFFFD2222), fontSize: 16.0)),
-                leading:
-                    const Icon(Icons.login_outlined, color: Color(0xFFFD2222)),
+                title: const Text("LOGOUT", style: TextStyle(color: Color(0xFFFD2222), fontSize: 16.0)),
+                leading: const Icon(Icons.login_outlined, color: Color(0xFFFD2222)),
               ),
               const Divider(
                   color: Colors.white,
@@ -996,6 +1009,240 @@ class _HomeState extends State<Home> {
         curve: Curves.linear,
         duration: const Duration(milliseconds: 200),
       );
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      // builder: (context) => CupertinoAlertDialog(
+      //   title: Container(
+      //     margin:
+      //         const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+      //     width: 100,
+      //     height: 100,
+      //     decoration: const BoxDecoration(
+      //       image: DecorationImage(
+      //         image: AssetImage("assets/error_info.png"),
+      //         fit: BoxFit.cover,
+      //       ),
+      //     ),
+      //   ),
+      //   content: const Text('Are you sure?', style: TextStyle(fontSize: 18)),
+      //   actions: [
+      //     CupertinoDialogAction(
+      //       child: const Text('CONFIRM', style: TextStyle(color: Colors.red)),
+      //       onPressed: () {
+      //         HapticFeedback.vibrate();
+      //         SystemSound.play(SystemSoundType.click);
+      //
+      //         Navigator.of(context).pop();
+      //
+      //         //TODO: Call API to delete generator from database!
+      //         _confirmDialog(context);
+      //       },
+      //     ),
+      //     CupertinoDialogAction(
+      //       child: const Text('CANCEL', style: TextStyle(color: Colors.grey)),
+      //       onPressed: () {
+      //         HapticFeedback.vibrate();
+      //         SystemSound.play(SystemSoundType.click);
+      //
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // ),
+      builder: (context) => ShakeAnimatedWidget(
+        enabled: true,
+        duration: const Duration(milliseconds: 1500),
+        shakeAngle: Rotation.deg(z: 1),
+        curve: Curves.linear,
+        child: TranslationAnimatedWidget(
+          values: const [
+            Offset(0, 200), // disabled value value
+            Offset(0, 250), //intermediate value
+            Offset(0, 0) //enabled value
+          ],
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 230),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+              ),
+            ),
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/logout.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Text(sureToLogout,
+                      style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 18,
+                          decoration: TextDecoration.none)),
+                  const SizedBox(height: 70),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.vibrate();
+                          SystemSound.play(SystemSoundType.click);
+
+                          Navigator.pop(context);
+
+                          //TODO: Call API to delete generator from database!
+                          _isLoggedOut = true;
+                          _confirmDialog(context);
+                        },
+                        child: Center(
+                          child: Container(
+                            width: 150,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.green,
+                                width: 1,
+                              ),
+                              color: Colors.green,
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  logout,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.vibrate();
+                          SystemSound.play(SystemSoundType.click);
+
+                          Navigator.pop(context);
+                        },
+                        child: Center(
+                          child: Container(
+                            width: 150,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              color: Colors.white,
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  cancel,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _confirmDialog(BuildContext context) {
+
+    if(_isLoggedOut) {
+      Timer(const Duration(milliseconds: 2000), () {
+        SystemNavigator.pop();
+      });
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => ScaleAnimatedWidget.tween(
+        enabled: true,
+        duration: const Duration(milliseconds: 300),
+        scaleDisabled: 0.5,
+        scaleEnabled: 1,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 230),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
+            ),
+          ),
+          child: Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  // margin: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                  width: 100,
+                  height: 100,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/ok_check.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(seeYouSoon,
+                    style: const TextStyle(
+                        color: Constant.accent,
+                        fontSize: 18,
+                        decoration: TextDecoration.none),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   void _updateProgress() {
     const oneSec = Duration(seconds: 1);

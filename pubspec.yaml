@@ -58,6 +58,8 @@ dependencies:
   audioplayers: ^0.20.1
   animated_widgets: ^1.1.0
   animated_radio_buttons: ^1.0.0
+  shared_preferences: ^2.0.13
+  overlay_dialog: ^0.2.1
   
 
 dev_dependencies:

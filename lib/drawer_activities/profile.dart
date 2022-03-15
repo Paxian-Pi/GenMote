@@ -36,7 +36,7 @@ class _ProfileState extends State<Profile> {
   late String changeHasBeenSaved;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       profileActivityText = English.profileActivityText;
       email = English.email;
       contacts = English.contacts;
@@ -52,7 +52,7 @@ class _ProfileState extends State<Profile> {
       changeHasBeenSaved = English.changeHasBeenSaved;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       profileActivityText = PidginEnglish.profileActivityText;
       email = PidginEnglish.email;
       contacts = PidginEnglish.contacts;

@@ -32,7 +32,7 @@ class _ParameterState extends State<Parameter> {
   late String forSmallPetrolGenerators;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       parameterText = English.parameterText;
       engineRunHours = English.engineRunHours;
       vibrationLevel = English.vibrationLevel;
@@ -43,7 +43,7 @@ class _ParameterState extends State<Parameter> {
       forSmallPetrolGenerators = English.forSmallPetrolGenerators;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       parameterText = PidginEnglish.parameterText;
       engineRunHours = PidginEnglish.engineRunHours;
       vibrationLevel = PidginEnglish.vibrationLevel;

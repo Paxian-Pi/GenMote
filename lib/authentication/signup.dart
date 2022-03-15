@@ -38,7 +38,7 @@ class _SignupState extends State<Signup> {
       loginText;
 
   void _lang() {
-    if (Constant.englishLang) {
+    if (Constant.isEnglishLang) {
       welcomeText = English.welcomeText;
       createAccount = English.createAccount;
       loginText = English.loginText;
@@ -54,7 +54,7 @@ class _SignupState extends State<Signup> {
       confirmPassword = English.confirmPassword;
     }
 
-    if (Constant.pidginEnglishLang) {
+    if (Constant.isPidginEnglishLang) {
       welcomeText = PidginEnglish.welcomeText;
       createAccount = PidginEnglish.createAccount;
       loginText = PidginEnglish.loginText;
