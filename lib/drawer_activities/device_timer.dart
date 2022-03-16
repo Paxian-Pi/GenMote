@@ -5,20 +5,16 @@ import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/methods.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:intl/intl.dart';
-import 'package:universal_internet_checker/universal_internet_checker.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
 import '../constants.dart';
-import 'home.dart';
 
 class DeviceTimer extends StatefulWidget {
   const DeviceTimer({Key? key}) : super(key: key);
@@ -62,12 +58,6 @@ class _DeviceTimerState extends State<DeviceTimer>
     }
   }
 
-  // var now = DateTime.now();
-  // var formatterDate = DateFormat('dd/MM/yy');
-  // var formatterTime = DateFormat('kk:mm');
-  // String actualDate = formatterDate.format(now);
-  // String actualTime = formatterTime.format(now);
-
   late AnimationController controller;
 
   bool isPlaying = false;
@@ -91,15 +81,6 @@ class _DeviceTimerState extends State<DeviceTimer>
   late String hour;
 
   final now = DateTime.now();
-
-  // String get shutDownTime {
-  //   DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
-  //   DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
-  //
-  //   String formattedHour = DateFormat('HH').format(durationHour);
-  //   String formattedMinutes = DateFormat('mm').format(durationMinutes);
-  //   return '$formattedHour:$formattedMinutes';
-  // }
 
   double progress = 1.0;
 
@@ -151,8 +132,7 @@ class _DeviceTimerState extends State<DeviceTimer>
 
     // Methods.wifiConnectivityState();
 
-    controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 0));
+    controller = AnimationController(vsync: this, duration: const Duration(seconds: 0));
 
     controller.addListener(() {
       _notify();
@@ -224,10 +204,9 @@ class _DeviceTimerState extends State<DeviceTimer>
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context);
         FlutterRingtonePlayer.stop();
         // return Future.value(true);
-        return false;
+        return true;
       },
       child: GestureDetector(
         onTap: () => FlutterRingtonePlayer.stop(),
@@ -343,11 +322,11 @@ class _DeviceTimerState extends State<DeviceTimer>
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const SizedBox(height: 30),
-                _setTimer(),
-                const SizedBox(height: 30),
+                _setTimerButton(),
+                const SizedBox(height: 20),
                 _runTime(),
                 const SizedBox(height: 20),
-                _timerView(),
+                _timerCircleWidget(),
                 const SizedBox(height: 20),
                 _controlButtons(),
                 const SizedBox(height: 30),
@@ -399,7 +378,7 @@ class _DeviceTimerState extends State<DeviceTimer>
   }
 
   // Timer activity widgets
-  Widget _setTimer() {
+  Widget _setTimerButton() {
     return GestureDetector(
       onTap: () {
         HapticFeedback.vibrate();
@@ -512,12 +491,8 @@ class _DeviceTimerState extends State<DeviceTimer>
           margin: const EdgeInsets.only(left: 15),
           child: Column(
             children: [
-              Text(currentStartTime,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 30)),
-              Text(currentStartTimeText,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 16)),
+              Text(currentStartTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(currentStartTimeText, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
             ],
           ),
         ),
@@ -525,12 +500,8 @@ class _DeviceTimerState extends State<DeviceTimer>
           margin: const EdgeInsets.only(right: 15),
           child: Column(
             children: [
-              Text(stopTime,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 30)),
-              Text(stopTimeText,
-                  style:
-                      const TextStyle(color: Constant.mainColor, fontSize: 16)),
+              Text(stopTime, style: const TextStyle(color: Constant.mainColor, fontSize: 30)),
+              Text(stopTimeText, style: const TextStyle(color: Constant.mainColor, fontSize: 16)),
             ],
           ),
         ),
@@ -538,14 +509,14 @@ class _DeviceTimerState extends State<DeviceTimer>
     );
   }
 
-  Widget _timerView() {
+  Widget _timerCircleWidget() {
     return Center(
       child: Stack(
         alignment: Alignment.center,
         children: [
           SizedBox(
-            width: 280,
-            height: 280,
+            width: 240,
+            height: 240,
             child: CircularProgressIndicator(
               backgroundColor: Colors.grey.shade300,
               value: progress,
@@ -556,7 +527,7 @@ class _DeviceTimerState extends State<DeviceTimer>
             animation: controller,
             builder: (context, child) => Text(
               countText,
-              style: const TextStyle(fontSize: 50, fontWeight: FontWeight.w400),
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
             ),
           ),
         ],

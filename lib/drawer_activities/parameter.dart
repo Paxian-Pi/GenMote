@@ -1,18 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:genmote/drawer_activities/home.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:universal_internet_checker/universal_internet_checker.dart';
-
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
 import '../constants.dart';
-import '../methods.dart';
 
 class Parameter extends StatefulWidget {
   const Parameter({Key? key}) : super(key: key);
@@ -91,37 +85,23 @@ class _ParameterState extends State<Parameter> {
   Widget build(BuildContext context) {
     _checkInternetConnection();
 
-    setState(() {
-      Constant.isOnline = _isOnline;
-      if (kDebugMode) {
-        print(Constant.isOnline);
-      }
-    });
-
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context);
-        // return Future.value(true);
-        return false;
-      },
-      child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/genmote_main.png"),
-              fit: BoxFit.cover,
-            ),
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/genmote_main.png"),
+            fit: BoxFit.cover,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _appBar(),
-              _parameterText(),
-              _parameterImage(),
-              _parameter(),
-            ],
-          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _appBar(),
+            _parameterText(),
+            _parameterImage(),
+            _parameter(),
+          ],
         ),
       ),
     );
@@ -196,8 +176,8 @@ class _ParameterState extends State<Parameter> {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-      margin: const EdgeInsets.only(top: 50, left: 20, right: 20),
-      width: size.width,
+      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      // width: size.width,
       height: 200,
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -211,7 +191,7 @@ class _ParameterState extends State<Parameter> {
   Widget _parameter() {
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.only(top: 50),
+        margin: const EdgeInsets.only(top: 30),
         width: double.infinity,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -233,22 +213,16 @@ class _ParameterState extends State<Parameter> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(engineRunHours,
-                        style: const TextStyle(fontSize: 18.0)),
-                    const Text('17 Hours',
-                        style: TextStyle(
-                            color: Constant.darkGrey, fontSize: 18.0)),
+                    Text(engineRunHours, style: const TextStyle(fontSize: 18.0)),
+                    const Text('17 Hours', style: TextStyle(color: Constant.darkGrey, fontSize: 18.0)),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(vibrationLevel,
-                        style: const TextStyle(fontSize: 18.0)),
-                    const Text('17 Hours',
-                        style: TextStyle(
-                            color: Constant.darkGrey, fontSize: 18.0)),
+                    Text(vibrationLevel, style: const TextStyle(fontSize: 18.0)),
+                    const Text('17 Hours', style: TextStyle(color: Constant.darkGrey, fontSize: 18.0)),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -256,9 +230,7 @@ class _ParameterState extends State<Parameter> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(outputVoltage, style: const TextStyle(fontSize: 18.0)),
-                    const Text('17 Hours',
-                        style: TextStyle(
-                            color: Constant.darkGrey, fontSize: 18.0)),
+                    const Text('17 Hours', style: TextStyle(color: Constant.darkGrey, fontSize: 18.0)),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -266,9 +238,7 @@ class _ParameterState extends State<Parameter> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(deviceIMEI, style: const TextStyle(fontSize: 18.0)),
-                    const Text('17 Hours',
-                        style: TextStyle(
-                            color: Constant.darkGrey, fontSize: 18.0)),
+                    const Text('17 Hours', style: TextStyle(color: Constant.darkGrey, fontSize: 18.0)),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -276,31 +246,23 @@ class _ParameterState extends State<Parameter> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(engineStatus, style: const TextStyle(fontSize: 18.0)),
-                    const Text('17 Hours',
-                        style: TextStyle(
-                            color: Constant.darkGrey, fontSize: 18.0)),
+                    const Text('17 Hours', style: TextStyle(color: Constant.darkGrey, fontSize: 18.0)),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(engineOilPressure,
-                        style: const TextStyle(fontSize: 18.0)),
-                    const Text('17 Hours',
-                        style: TextStyle(
-                            color: Constant.darkGrey, fontSize: 18.0)),
+                    Text(engineOilPressure, style: const TextStyle(fontSize: 18.0)),
+                    const Text('17 Hours', style: TextStyle(color: Constant.darkGrey, fontSize: 18.0)),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(forSmallPetrolGenerators,
-                        style: const TextStyle(fontSize: 18.0)),
-                    const Text('17 Hours',
-                        style: TextStyle(
-                            color: Constant.darkGrey, fontSize: 18.0)),
+                    Text(forSmallPetrolGenerators, style: const TextStyle(fontSize: 18.0)),
+                    const Text('17 Hours', style: TextStyle(color: Constant.darkGrey, fontSize: 18.0)),
                   ],
                 ),
                 const SizedBox(height: 10),

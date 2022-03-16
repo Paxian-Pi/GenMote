@@ -122,7 +122,13 @@ class _HomeState extends State<Home> {
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late String textOne, textTwo, textThree, logout, cancel, sureToLogout, seeYouSoon;
+  late String textOne,
+      textTwo,
+      textThree,
+      logout,
+      cancel,
+      sureToLogout,
+      seeYouSoon;
 
   void _lang() {
     if (Constant.isEnglishLang) {
@@ -182,14 +188,12 @@ class _HomeState extends State<Home> {
     try {
       final response = await InternetAddress.lookup(Constant.appDomain);
 
-      if(response.isNotEmpty) {
+      if (response.isNotEmpty) {
         setState(() {
           _isConnected = true;
         });
-
       }
-    }
-    on SocketException catch (err) {
+    } on SocketException catch (err) {
       setState(() {
         _isConnected = false;
       });
@@ -239,11 +243,6 @@ class _HomeState extends State<Home> {
     _message = _status == ConnectionStatus.online ? 'Connected' : 'Not Connected';
     _status == ConnectionStatus.online ? _isOnline = true : _isOnline = false;
     Constant.isOnline = _isOnline;
-
-    // if (kDebugMode) {
-    //   print('Connected: $_isOnline');
-    //   print('Status: $_message');
-    // }
 
     return Scaffold(
       key: scaffoldKey,
@@ -446,12 +445,12 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: [
                   _pageViewer(),
-                  const SizedBox(height: 5),
                   _buildIndicator(),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
                   _powerButton(),
                   const SizedBox(height: 30),
                   _activityWidget(),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
@@ -589,7 +588,7 @@ class _HomeState extends State<Home> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       width: size.width,
-      height: 200,
+      height: 150,
       decoration: BoxDecoration(
         color: Constant.grey.withOpacity(0.7),
         borderRadius: const BorderRadius.only(
@@ -896,13 +895,14 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         Positioned(
-                            child: SizedBox(
-                          width: size.width,
-                          height: size.height,
-                          child: _isPowerButtonClicked
-                              ? const CircleAvatar(backgroundImage: AssetImage('assets/on_no_network.png'))
-                              : const CircleAvatar(backgroundImage: AssetImage('assets/off_no_network.png')),
-                        )),
+                          child: SizedBox(
+                            width: size.width,
+                            height: size.height,
+                            child: _isPowerButtonClicked
+                                ? const CircleAvatar(backgroundImage: AssetImage('assets/on_no_network.png'))
+                                : const CircleAvatar(backgroundImage: AssetImage('assets/off_no_network.png')),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -912,10 +912,9 @@ class _HomeState extends State<Home> {
           ],
         ),
         const SizedBox(height: 20),
-        const Text('OFF', style: TextStyle(color: Colors.white, fontSize: 14)),
+        Text(_isPowerButtonClicked ? 'ACTIVE' : 'OFF', style: const TextStyle(color: Colors.white, fontSize: 14)),
         const SizedBox(height: 10),
-        const Text('CLICK TO TURN ON DEVICE',
-            style: TextStyle(color: Colors.white, fontSize: 14)),
+        Text(_isPowerButtonClicked ? 'CLICK TO TURN OFF DEVICE' : 'CLICK TO TURN ON DEVICE', style: const TextStyle(color: Colors.white, fontSize: 14)),
       ],
     );
   }
@@ -929,8 +928,7 @@ class _HomeState extends State<Home> {
           children: [
             _temperatureMeter(),
             const SizedBox(height: 20),
-            const Text('TEMPERATURE',
-                style: TextStyle(color: Constant.white, fontSize: 14)),
+            const Text('TEMPERATURE', style: TextStyle(color: Constant.white, fontSize: 14)),
           ],
         ),
         const SizedBox(width: 50),
@@ -939,8 +937,7 @@ class _HomeState extends State<Home> {
           children: [
             _vibrationsMeter(),
             const SizedBox(height: 20),
-            const Text('VIBRATIONS',
-                style: TextStyle(color: Constant.white, fontSize: 14)),
+            const Text('VIBRATIONS', style: TextStyle(color: Constant.white, fontSize: 14)),
           ],
         ),
       ],
@@ -1095,7 +1092,7 @@ class _HomeState extends State<Home> {
                           color: Colors.grey,
                           fontSize: 18,
                           decoration: TextDecoration.none)),
-                  const SizedBox(height: 70),
+                  const SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -1121,7 +1118,7 @@ class _HomeState extends State<Home> {
                               ),
                               color: Colors.green,
                               borderRadius:
-                              const BorderRadius.all(Radius.circular(5)),
+                                  const BorderRadius.all(Radius.circular(5)),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1157,7 +1154,7 @@ class _HomeState extends State<Home> {
                               ),
                               color: Colors.white,
                               borderRadius:
-                              const BorderRadius.all(Radius.circular(5)),
+                                  const BorderRadius.all(Radius.circular(5)),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1187,8 +1184,7 @@ class _HomeState extends State<Home> {
   }
 
   void _confirmDialog(BuildContext context) {
-
-    if(_isLoggedOut) {
+    if (_isLoggedOut) {
       Timer(const Duration(milliseconds: 2000), () {
         SystemNavigator.pop();
       });
@@ -1230,11 +1226,12 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(seeYouSoon,
-                    style: const TextStyle(
-                        color: Constant.accent,
-                        fontSize: 18,
-                        decoration: TextDecoration.none),
+                Text(
+                  seeYouSoon,
+                  style: const TextStyle(
+                      color: Constant.accent,
+                      fontSize: 18,
+                      decoration: TextDecoration.none),
                 ),
               ],
             ),
