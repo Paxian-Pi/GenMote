@@ -593,8 +593,8 @@ class _DeviceTimerState extends State<DeviceTimer>
             Timer(const Duration(seconds: 1), () {
               setState(() {
                 if (!_isConnected) {
-                  Methods.showToast(
-                      'No internet connection...', ToastGravity.CENTER);
+                  Methods.showToast('No internet connection...', ToastGravity.CENTER);
+                  HapticFeedback.vibrate();
                   return;
                 }
 
@@ -620,22 +620,15 @@ class _DeviceTimerState extends State<DeviceTimer>
 
                   setState(() {
                     isPlaying = true;
-                    currentStartTime =
-                        '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+                    currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
-                    DateTime durationHour =
-                        now.add(Duration(hours: controller.duration!.inHours));
-                    DateTime durationMinutes = now
-                        .add(Duration(minutes: controller.duration!.inMinutes));
-                    String formattedHour =
-                        DateFormat('HH').format(durationHour);
-                    String formattedMinutes =
-                        DateFormat('mm').format(durationMinutes);
+                    DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
+                    DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
+                    String formattedHour = DateFormat('HH').format(durationHour);
+                    String formattedMinutes = DateFormat('mm').format(durationMinutes);
 
-                    int currentHour = int.parse(
-                        DateTime.now().hour.toString().padLeft(2, '0'));
-                    int currentMinutes = int.parse(
-                        DateTime.now().minute.toString().padLeft(2, '0'));
+                    int currentHour = int.parse(DateTime.now().hour.toString().padLeft(2, '0'));
+                    int currentMinutes = int.parse(DateTime.now().minute.toString().padLeft(2, '0'));
                     int countMinutes = int.parse(countText.substring(3, 5));
                     int countHour = int.parse(countText.substring(0, 2));
 
@@ -651,20 +644,27 @@ class _DeviceTimerState extends State<DeviceTimer>
                     if (int.parse(hour) < 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = int.parse(hour) + 1;
-                      stopTime =
-                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      // Methods.showToast('1...', ToastGravity.CENTER);
                     }
 
                     if (int.parse(hour) >= 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = 0;
-                      stopTime =
-                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      // Methods.showToast('2...', ToastGravity.CENTER);
+                    }
+
+                    if (int.parse(hour) >= 23 && int.parse(min) < 60) {
+                      int newMin = currentMinutes;
+                      int newHour = countHour - (24 - currentHour);
+                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      // Methods.showToast('3...', ToastGravity.CENTER);
                     }
 
                     if (int.parse(hour) < 24 && int.parse(min) < 60) {
-                      stopTime =
-                          '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
+                      stopTime = '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
+                      // Methods.showToast('4...', ToastGravity.CENTER);
                     }
                   });
                 }
