@@ -648,15 +648,24 @@ class _DeviceTimerState extends State<DeviceTimer>
                       // Methods.showToast('1...', ToastGravity.CENTER);
                     }
 
+                    // if (int.parse(hour) >= 23 && int.parse(min) > 59) {
+                    // if (int.parse(hour) >= 23 && int.parse(min) > 59) {
+                    //   int newMin = countMinutes - (60 - currentMinutes);
+                    //   int newHour = countHour - (24 - currentHour);
+                    //   // int newHour = 0;
+                    //   stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                    //   Methods.showToast('2...', ToastGravity.CENTER);
+                    // }
+
                     if (int.parse(hour) >= 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
-                      int newHour = 0;
+                      int newHour = (countHour - (24 - currentHour) + 1);
                       stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
-                      // Methods.showToast('2...', ToastGravity.CENTER);
+                      // Methods.showToast('2i...', ToastGravity.CENTER);
                     }
 
                     if (int.parse(hour) >= 23 && int.parse(min) < 60) {
-                      int newMin = currentMinutes;
+                      int newMin = countMinutes + currentMinutes;
                       int newHour = countHour - (24 - currentHour);
                       stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                       // Methods.showToast('3...', ToastGravity.CENTER);
