@@ -14,6 +14,8 @@ class SelectLanguage extends StatefulWidget {
 
 class _SelectLanguageState extends State<SelectLanguage> {
 
+  late SharedPreferences _prefs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,13 +49,10 @@ class _SelectLanguageState extends State<SelectLanguage> {
                   const SizedBox(height: 10),
                   ListTile(
                     onTap: () async {
-                      final prefs = await SharedPreferences.getInstance();
+                      _prefs = await SharedPreferences.getInstance();
 
-                      // SharedPrefs.pref().then((value) => value.setBool(Constant.englishLang, Constant.isEnglishLang = true));
-                      // SharedPrefs.pref().then((value) => value.remove(Constant.pidginEnglishLang));
-
-                      prefs.setBool(Constant.englishLang, Constant.isEnglishLang = true);
-                      prefs.remove(Constant.pidginEnglishLang);
+                      _prefs.setBool(Constant.englishLang, Constant.isEnglishLang = true);
+                      _prefs.remove(Constant.pidginEnglishLang);
 
                       _onBoardingPage();
                     },
@@ -62,13 +61,10 @@ class _SelectLanguageState extends State<SelectLanguage> {
                   ),
                   ListTile(
                     onTap: () async {
-                      final prefs = await SharedPreferences.getInstance();
+                      _prefs = await SharedPreferences.getInstance();
 
-                      // SharedPrefs.pref().then((value) => value.setBool(Constant.pidginEnglishLang, Constant.isPidginEnglishLang = true));
-                      // SharedPrefs.pref().then((value) => value.remove(Constant.englishLang));
-
-                      prefs.setBool(Constant.pidginEnglishLang, Constant.isPidginEnglishLang = true);
-                      prefs.remove(Constant.englishLang);
+                      _prefs.setBool(Constant.pidginEnglishLang, Constant.isPidginEnglishLang = true);
+                      _prefs.remove(Constant.englishLang);
 
                       _onBoardingPage();
                     },
