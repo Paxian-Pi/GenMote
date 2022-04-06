@@ -13,7 +13,6 @@ class SelectLanguage extends StatefulWidget {
 }
 
 class _SelectLanguageState extends State<SelectLanguage> {
-
   late SharedPreferences _prefs;
 
   @override
@@ -45,31 +44,36 @@ class _SelectLanguageState extends State<SelectLanguage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
-                  const Text('Select Language', style: TextStyle(color: Colors.white, fontSize: 20)),
+                  const Text('Select Language',
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
                   const SizedBox(height: 10),
                   ListTile(
                     onTap: () async {
                       _prefs = await SharedPreferences.getInstance();
 
-                      _prefs.setBool(Constant.englishLang, Constant.isEnglishLang = true);
+                      _prefs.setBool(
+                          Constant.englishLang, Constant.isEnglishLang = true);
                       _prefs.remove(Constant.pidginEnglishLang);
 
                       _onBoardingPage();
                     },
                     title: const Text("English"),
-                    leading: const Icon(Icons.language_outlined, color: Constant.skyBlue),
+                    leading: const Icon(Icons.language_outlined,
+                        color: Constant.skyBlue),
                   ),
                   ListTile(
                     onTap: () async {
                       _prefs = await SharedPreferences.getInstance();
 
-                      _prefs.setBool(Constant.pidginEnglishLang, Constant.isPidginEnglishLang = true);
+                      _prefs.setBool(Constant.pidginEnglishLang,
+                          Constant.isPidginEnglishLang = true);
                       _prefs.remove(Constant.englishLang);
 
                       _onBoardingPage();
                     },
                     title: const Text("Pidgin English"),
-                    leading: const Icon(Icons.language_outlined, color: Constant.skyBlue),
+                    leading: const Icon(Icons.language_outlined,
+                        color: Constant.skyBlue),
                   ),
                 ],
               ),
