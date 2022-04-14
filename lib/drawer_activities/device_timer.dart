@@ -6,11 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/methods.dart';
-import 'package:overlay_dialog/overlay_dialog.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:intl/intl.dart';
+import 'package:overlay_dialog/overlay_dialog.dart';
 
 import '../app_languages/english.dart';
 import '../app_languages/pidginEnglish.dart';
@@ -23,8 +23,8 @@ class DeviceTimer extends StatefulWidget {
   _DeviceTimerState createState() => _DeviceTimerState();
 }
 
-class _DeviceTimerState extends State<DeviceTimer>
-    with TickerProviderStateMixin {
+class _DeviceTimerState extends State<DeviceTimer> with TickerProviderStateMixin {
+
   late String timerText;
   late String setTimer;
   late String currentStartTimeText;
@@ -58,6 +58,8 @@ class _DeviceTimerState extends State<DeviceTimer>
     }
   }
 
+  Color _indicatorColor = Colors.green;
+
   late AnimationController controller;
 
   bool isPlaying = false;
@@ -69,11 +71,9 @@ class _DeviceTimerState extends State<DeviceTimer>
         : '${(count.inHours).toString().padLeft(2, '0')}:${(count.inMinutes % 60).toString().padLeft(2, '0')}:${(count.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 
-  String currentStartTime =
-      '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+  String currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
-  String stopTime =
-      '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+  String stopTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
   // String shutDownTime = '00:00';
 
@@ -97,8 +97,12 @@ class _DeviceTimerState extends State<DeviceTimer>
         asAlarm: false, // Android only - all APIs
       );
 
+      _indicatorColor = Colors.red;
+
       // _timerAlert(context);
-      Methods.showToast('Generator will shut down in less than ${(countText).substring(4, 5)} mins', ToastGravity.CENTER);
+      // Methods.showToast(
+      //     'Generator will shut down in less than ${(countText).substring(4, 5)} mins',
+      //     ToastGravity.CENTER);
     }
   }
 
@@ -137,6 +141,12 @@ class _DeviceTimerState extends State<DeviceTimer>
     controller.addListener(() {
       _notify();
 
+      if (countText == '00:00:01') {
+        setState(() {
+          _indicatorColor = Colors.green;
+        });
+      }
+
       if (controller.isAnimating) {
         setState(() {
           progress = controller.value;
@@ -167,7 +177,7 @@ class _DeviceTimerState extends State<DeviceTimer>
         scaleDisabled: 0.5,
         scaleEnabled: 1,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 230),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 300),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -181,12 +191,13 @@ class _DeviceTimerState extends State<DeviceTimer>
             margin: const EdgeInsets.only(left: 20, right: 20),
             child: Material(
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 30),
+                  // const SizedBox(height: 30),
                   Text(
                     'Generator will shut down in less than ${(countText).substring(4, 5)} mins',
+                    textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 20),
                   )
                 ],
@@ -385,7 +396,7 @@ class _DeviceTimerState extends State<DeviceTimer>
         SystemSound.play(SystemSoundType.click);
 
         if (!controller.isDismissed) {
-          Methods.showToast('Timer currently running!', ToastGravity.BOTTOM);
+          Methods.showToast('Timer is currently running!', ToastGravity.BOTTOM);
         } else {
           // showModalBottomSheet(
           //   context: context,
@@ -519,6 +530,7 @@ class _DeviceTimerState extends State<DeviceTimer>
             height: 240,
             child: CircularProgressIndicator(
               backgroundColor: Colors.grey.shade300,
+              color: _indicatorColor,
               value: progress,
               strokeWidth: 10,
             ),
@@ -547,6 +559,8 @@ class _DeviceTimerState extends State<DeviceTimer>
             controller.reset();
             setState(() {
               isPlaying = false;
+              FlutterRingtonePlayer.stop();
+              _indicatorColor = Colors.green;
             });
           },
           child: Container(
@@ -614,21 +628,25 @@ class _DeviceTimerState extends State<DeviceTimer>
                     isPlaying = false;
                   });
                 } else {
-                  controller.reverse(
-                    from: controller.value == 0 ? 1.0 : controller.value,
-                  );
+                  controller.reverse(from: controller.value == 0 ? 1.0 : controller.value);
 
                   setState(() {
                     isPlaying = true;
                     currentStartTime = '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}';
 
-                    DateTime durationHour = now.add(Duration(hours: controller.duration!.inHours));
-                    DateTime durationMinutes = now.add(Duration(minutes: controller.duration!.inMinutes));
-                    String formattedHour = DateFormat('HH').format(durationHour);
-                    String formattedMinutes = DateFormat('mm').format(durationMinutes);
+                    DateTime durationHour =
+                        now.add(Duration(hours: controller.duration!.inHours));
+                    DateTime durationMinutes = now
+                        .add(Duration(minutes: controller.duration!.inMinutes));
+                    String formattedHour =
+                        DateFormat('HH').format(durationHour);
+                    String formattedMinutes =
+                        DateFormat('mm').format(durationMinutes);
 
-                    int currentHour = int.parse(DateTime.now().hour.toString().padLeft(2, '0'));
-                    int currentMinutes = int.parse(DateTime.now().minute.toString().padLeft(2, '0'));
+                    int currentHour = int.parse(
+                        DateTime.now().hour.toString().padLeft(2, '0'));
+                    int currentMinutes = int.parse(
+                        DateTime.now().minute.toString().padLeft(2, '0'));
                     int countMinutes = int.parse(countText.substring(3, 5));
                     int countHour = int.parse(countText.substring(0, 2));
 
@@ -644,7 +662,8 @@ class _DeviceTimerState extends State<DeviceTimer>
                     if (int.parse(hour) < 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = int.parse(hour) + 1;
-                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      stopTime =
+                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                       // Methods.showToast('1...', ToastGravity.CENTER);
                     }
 
@@ -660,19 +679,22 @@ class _DeviceTimerState extends State<DeviceTimer>
                     if (int.parse(hour) >= 23 && int.parse(min) > 59) {
                       int newMin = countMinutes - (60 - currentMinutes);
                       int newHour = (countHour - (24 - currentHour) + 1);
-                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      stopTime =
+                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                       // Methods.showToast('2i...', ToastGravity.CENTER);
                     }
 
                     if (int.parse(hour) >= 23 && int.parse(min) < 60) {
                       int newMin = countMinutes + currentMinutes;
                       int newHour = countHour - (24 - currentHour);
-                      stopTime = '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
+                      stopTime =
+                          '${(newHour).toString().padLeft(2, '0')}:${(newMin).toString().padLeft(2, '0')}';
                       // Methods.showToast('3...', ToastGravity.CENTER);
                     }
 
                     if (int.parse(hour) < 24 && int.parse(min) < 60) {
-                      stopTime = '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
+                      stopTime =
+                          '${(hour).padLeft(2, '0')}:${(min).padLeft(2, '0')}';
                       // Methods.showToast('4...', ToastGravity.CENTER);
                     }
                   });
