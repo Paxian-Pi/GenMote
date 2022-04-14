@@ -51,29 +51,25 @@ class _SelectLanguageState extends State<SelectLanguage> {
                     onTap: () async {
                       _prefs = await SharedPreferences.getInstance();
 
-                      _prefs.setBool(
-                          Constant.englishLang, Constant.isEnglishLang = true);
+                      _prefs.setBool(Constant.englishLang, Constant.isEnglishLang = true);
                       _prefs.remove(Constant.pidginEnglishLang);
 
                       _onBoardingPage();
                     },
                     title: const Text("English"),
-                    leading: const Icon(Icons.language_outlined,
-                        color: Constant.skyBlue),
+                    leading: const Icon(Icons.language_outlined, color: Constant.skyBlue),
                   ),
                   ListTile(
                     onTap: () async {
                       _prefs = await SharedPreferences.getInstance();
 
-                      _prefs.setBool(Constant.pidginEnglishLang,
-                          Constant.isPidginEnglishLang = true);
+                      _prefs.setBool(Constant.pidginEnglishLang, Constant.isPidginEnglishLang = true);
                       _prefs.remove(Constant.englishLang);
 
                       _onBoardingPage();
                     },
                     title: const Text("Pidgin English"),
-                    leading: const Icon(Icons.language_outlined,
-                        color: Constant.skyBlue),
+                    leading: const Icon(Icons.language_outlined, color: Constant.skyBlue),
                   ),
                 ],
               ),
