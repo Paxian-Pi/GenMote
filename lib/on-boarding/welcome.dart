@@ -16,6 +16,12 @@ class _SelectLanguageState extends State<SelectLanguage> {
   late SharedPreferences _prefs;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -51,25 +57,29 @@ class _SelectLanguageState extends State<SelectLanguage> {
                     onTap: () async {
                       _prefs = await SharedPreferences.getInstance();
 
-                      _prefs.setBool(Constant.englishLang, Constant.isEnglishLang = true);
+                      _prefs.setBool(
+                          Constant.englishLang, Constant.isEnglishLang = true);
                       _prefs.remove(Constant.pidginEnglishLang);
 
                       _onBoardingPage();
                     },
                     title: const Text("English"),
-                    leading: const Icon(Icons.language_outlined, color: Constant.skyBlue),
+                    leading: const Icon(Icons.language_outlined,
+                        color: Constant.skyBlue),
                   ),
                   ListTile(
                     onTap: () async {
                       _prefs = await SharedPreferences.getInstance();
 
-                      _prefs.setBool(Constant.pidginEnglishLang, Constant.isPidginEnglishLang = true);
+                      _prefs.setBool(Constant.pidginEnglishLang,
+                          Constant.isPidginEnglishLang = true);
                       _prefs.remove(Constant.englishLang);
 
                       _onBoardingPage();
                     },
                     title: const Text("Pidgin English"),
-                    leading: const Icon(Icons.language_outlined, color: Constant.skyBlue),
+                    leading: const Icon(Icons.language_outlined,
+                        color: Constant.skyBlue),
                   ),
                 ],
               ),

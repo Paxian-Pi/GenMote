@@ -6,27 +6,25 @@ import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:animated_widgets/widgets/shake_animated_widget.dart';
 import 'package:animated_widgets/widgets/translation_animated.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:genmote/constants.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:genmote/drawer_activities/device_timer.dart';
 import 'package:genmote/drawer_activities/devices/devices_main.dart';
 import 'package:genmote/drawer_activities/locator.dart';
 import 'package:genmote/drawer_activities/parameter.dart';
 import 'package:genmote/drawer_activities/profile.dart';
 import 'package:genmote/drawer_activities/settings.dart';
 import 'package:genmote/drawer_activities/sims.dart';
-import 'package:genmote/drawer_activities/device_timer.dart';
 import 'package:genmote/home_page_text/text1.dart';
 import 'package:genmote/home_page_text/text3.dart';
 import 'package:genmote/methods.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:network_connectivity/network_connectivity.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:universal_internet_checker/universal_internet_checker.dart';
 
 import '../app_languages/english.dart';
@@ -119,6 +117,8 @@ class _HomeState extends State<Home> {
   //     body: _getGauge(),
   //   );
   // }
+
+  late SharedPreferences _prefs;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -240,7 +240,8 @@ class _HomeState extends State<Home> {
 
     var _service = ServiceProvider.of(context).methods;
 
-    _message = _status == ConnectionStatus.online ? 'Connected' : 'Not Connected';
+    _message =
+        _status == ConnectionStatus.online ? 'Connected' : 'Not Connected';
     _status == ConnectionStatus.online ? _isOnline = true : _isOnline = false;
     Constant.isOnline = _isOnline;
 
@@ -796,8 +797,10 @@ class _HomeState extends State<Home> {
                     _showLogoutDialog(context);
                   });
                 },
-                title: const Text("LOGOUT", style: TextStyle(color: Color(0xFFFD2222), fontSize: 16.0)),
-                leading: const Icon(Icons.login_outlined, color: Color(0xFFFD2222)),
+                title: const Text("LOGOUT",
+                    style: TextStyle(color: Color(0xFFFD2222), fontSize: 16.0)),
+                leading:
+                    const Icon(Icons.login_outlined, color: Color(0xFFFD2222)),
               ),
               const Divider(
                   color: Colors.white,
@@ -899,8 +902,12 @@ class _HomeState extends State<Home> {
                             width: size.width,
                             height: size.height,
                             child: _isPowerButtonClicked
-                                ? const CircleAvatar(backgroundImage: AssetImage('assets/on_no_network.png'))
-                                : const CircleAvatar(backgroundImage: AssetImage('assets/off_no_network.png')),
+                                ? const CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage('assets/on_no_network.png'))
+                                : const CircleAvatar(
+                                    backgroundImage: AssetImage(
+                                        'assets/off_no_network.png')),
                           ),
                         ),
                       ],
@@ -912,9 +919,14 @@ class _HomeState extends State<Home> {
           ],
         ),
         const SizedBox(height: 20),
-        Text(_isPowerButtonClicked ? 'ACTIVE' : 'OFF', style: const TextStyle(color: Colors.white, fontSize: 14)),
+        Text(_isPowerButtonClicked ? 'ACTIVE' : 'OFF',
+            style: const TextStyle(color: Colors.white, fontSize: 14)),
         const SizedBox(height: 10),
-        Text(_isPowerButtonClicked ? 'CLICK TO TURN OFF DEVICE' : 'CLICK TO TURN ON DEVICE', style: const TextStyle(color: Colors.white, fontSize: 14)),
+        Text(
+            _isPowerButtonClicked
+                ? 'CLICK TO TURN OFF DEVICE'
+                : 'CLICK TO TURN ON DEVICE',
+            style: const TextStyle(color: Colors.white, fontSize: 14)),
       ],
     );
   }
@@ -928,7 +940,8 @@ class _HomeState extends State<Home> {
           children: [
             _temperatureMeter(),
             const SizedBox(height: 20),
-            const Text('TEMPERATURE', style: TextStyle(color: Constant.white, fontSize: 14)),
+            const Text('TEMPERATURE',
+                style: TextStyle(color: Constant.white, fontSize: 14)),
           ],
         ),
         const SizedBox(width: 50),
@@ -937,7 +950,8 @@ class _HomeState extends State<Home> {
           children: [
             _vibrationsMeter(),
             const SizedBox(height: 20),
-            const Text('VIBRATIONS', style: TextStyle(color: Constant.white, fontSize: 14)),
+            const Text('VIBRATIONS',
+                style: TextStyle(color: Constant.white, fontSize: 14)),
           ],
         ),
       ],
@@ -1077,7 +1091,8 @@ class _HomeState extends State<Home> {
                 children: [
                   const SizedBox(height: 20),
                   Container(
-                    margin: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                    margin: const EdgeInsets.only(
+                        top: 10, left: 20, right: 20, bottom: 20),
                     width: 100,
                     height: 100,
                     decoration: const BoxDecoration(
@@ -1105,7 +1120,7 @@ class _HomeState extends State<Home> {
 
                           //TODO: Call API to delete generator from database!
                           _isLoggedOut = true;
-                          _confirmDialog(context);
+                          _confirmLogoutDialog(context);
                         },
                         child: Center(
                           child: Container(
@@ -1183,12 +1198,17 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _confirmDialog(BuildContext context) {
+  void _confirmLogoutDialog(BuildContext context) async {
     if (_isLoggedOut) {
       Timer(const Duration(milliseconds: 2000), () {
         SystemNavigator.pop();
       });
     }
+
+    _prefs = await SharedPreferences.getInstance();
+
+    _prefs.remove(Constant.englishLang);
+    _prefs.remove(Constant.pidginEnglishLang);
 
     showDialog(
       context: context,

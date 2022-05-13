@@ -758,15 +758,16 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _changeSaved() {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const CircleAvatar(
           backgroundColor: Colors.white,
           radius: 40,
           backgroundImage: AssetImage('assets/ok_check.png'),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(width: 10),
         Text(
           changeHasBeenSaved,
           style: const TextStyle(
@@ -1148,7 +1149,7 @@ class _ProfileState extends State<Profile> {
         scaleDisabled: 0.5,
         scaleEnabled: 1,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 210),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 190),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
